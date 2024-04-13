@@ -6764,7 +6764,11 @@ module CGRA(
   input         io_axistream_s_valid,
   output        io_axistream_s_ready,
   input  [31:0] io_axistream_s_data,
-  input         io_axistream_s_last
+  input         io_axistream_s_last,
+  output        io_axistream_m_valid,
+  input         io_axistream_m_ready,
+  output [31:0] io_axistream_m_data,
+  output        io_axistream_m_last
 );
 `ifdef RANDOMIZE_REG_INIT
   reg [31:0] _RAND_0;
@@ -6778,493 +6782,549 @@ module CGRA(
   reg [31:0] _RAND_8;
   reg [31:0] _RAND_9;
   reg [31:0] _RAND_10;
+  reg [31:0] _RAND_11;
 `endif // RANDOMIZE_REG_INIT
-  wire  PE_clock; // @[CGRA.scala 14:53]
-  wire  PE_reset; // @[CGRA.scala 14:53]
-  wire [31:0] PE_io_inLinks_0; // @[CGRA.scala 14:53]
-  wire [31:0] PE_io_inLinks_3; // @[CGRA.scala 14:53]
-  wire  PE_io_outLinks_0_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_io_outLinks_0_bits; // @[CGRA.scala 14:53]
-  wire  PE_io_outLinks_3_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_io_outLinks_3_bits; // @[CGRA.scala 14:53]
-  wire  PE_io_run; // @[CGRA.scala 14:53]
-  wire  PE_io_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_io_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_io_wdata; // @[CGRA.scala 14:53]
-  wire  PE_io_finish; // @[CGRA.scala 14:53]
-  wire  PE_io_datamemio_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_io_datamemio_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_io_datamemio_wdata; // @[CGRA.scala 14:53]
-  wire  PE_io_datamemio_ren; // @[CGRA.scala 14:53]
-  wire [31:0] PE_io_datamemio_raddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_io_datamemio_rdata; // @[CGRA.scala 14:53]
-  wire  PE_io_datamemio_memoptvalid; // @[CGRA.scala 14:53]
-  wire  PE_1_clock; // @[CGRA.scala 14:53]
-  wire  PE_1_reset; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_inLinks_0; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_inLinks_2; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_inLinks_3; // @[CGRA.scala 14:53]
-  wire  PE_1_io_outLinks_0_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_outLinks_0_bits; // @[CGRA.scala 14:53]
-  wire  PE_1_io_outLinks_2_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_outLinks_2_bits; // @[CGRA.scala 14:53]
-  wire  PE_1_io_outLinks_3_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_outLinks_3_bits; // @[CGRA.scala 14:53]
-  wire  PE_1_io_run; // @[CGRA.scala 14:53]
-  wire  PE_1_io_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_wdata; // @[CGRA.scala 14:53]
-  wire  PE_1_io_finish; // @[CGRA.scala 14:53]
-  wire  PE_1_io_datamemio_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_datamemio_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_datamemio_wdata; // @[CGRA.scala 14:53]
-  wire  PE_1_io_datamemio_ren; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_datamemio_raddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_1_io_datamemio_rdata; // @[CGRA.scala 14:53]
-  wire  PE_1_io_datamemio_memoptvalid; // @[CGRA.scala 14:53]
-  wire  PE_2_clock; // @[CGRA.scala 14:53]
-  wire  PE_2_reset; // @[CGRA.scala 14:53]
-  wire [31:0] PE_2_io_inLinks_0; // @[CGRA.scala 14:53]
-  wire [31:0] PE_2_io_inLinks_2; // @[CGRA.scala 14:53]
-  wire  PE_2_io_outLinks_0_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_2_io_outLinks_0_bits; // @[CGRA.scala 14:53]
-  wire  PE_2_io_outLinks_2_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_2_io_outLinks_2_bits; // @[CGRA.scala 14:53]
-  wire  PE_2_io_run; // @[CGRA.scala 14:53]
-  wire  PE_2_io_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_2_io_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_2_io_wdata; // @[CGRA.scala 14:53]
-  wire  PE_2_io_finish; // @[CGRA.scala 14:53]
-  wire  PE_2_io_datamemio_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_2_io_datamemio_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_2_io_datamemio_wdata; // @[CGRA.scala 14:53]
-  wire  PE_2_io_datamemio_ren; // @[CGRA.scala 14:53]
-  wire [31:0] PE_2_io_datamemio_raddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_2_io_datamemio_rdata; // @[CGRA.scala 14:53]
-  wire  PE_2_io_datamemio_memoptvalid; // @[CGRA.scala 14:53]
-  wire  PE_3_clock; // @[CGRA.scala 14:53]
-  wire  PE_3_reset; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_inLinks_0; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_inLinks_1; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_inLinks_3; // @[CGRA.scala 14:53]
-  wire  PE_3_io_outLinks_0_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_outLinks_0_bits; // @[CGRA.scala 14:53]
-  wire  PE_3_io_outLinks_1_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_outLinks_1_bits; // @[CGRA.scala 14:53]
-  wire  PE_3_io_outLinks_3_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_outLinks_3_bits; // @[CGRA.scala 14:53]
-  wire  PE_3_io_run; // @[CGRA.scala 14:53]
-  wire  PE_3_io_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_wdata; // @[CGRA.scala 14:53]
-  wire  PE_3_io_finish; // @[CGRA.scala 14:53]
-  wire  PE_3_io_datamemio_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_datamemio_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_datamemio_wdata; // @[CGRA.scala 14:53]
-  wire  PE_3_io_datamemio_ren; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_datamemio_raddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_3_io_datamemio_rdata; // @[CGRA.scala 14:53]
-  wire  PE_3_io_datamemio_memoptvalid; // @[CGRA.scala 14:53]
-  wire  PE_4_clock; // @[CGRA.scala 14:53]
-  wire  PE_4_reset; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_inLinks_0; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_inLinks_1; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_inLinks_2; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_inLinks_3; // @[CGRA.scala 14:53]
-  wire  PE_4_io_outLinks_0_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_outLinks_0_bits; // @[CGRA.scala 14:53]
-  wire  PE_4_io_outLinks_1_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_outLinks_1_bits; // @[CGRA.scala 14:53]
-  wire  PE_4_io_outLinks_2_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_outLinks_2_bits; // @[CGRA.scala 14:53]
-  wire  PE_4_io_outLinks_3_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_outLinks_3_bits; // @[CGRA.scala 14:53]
-  wire  PE_4_io_run; // @[CGRA.scala 14:53]
-  wire  PE_4_io_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_wdata; // @[CGRA.scala 14:53]
-  wire  PE_4_io_finish; // @[CGRA.scala 14:53]
-  wire  PE_4_io_datamemio_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_datamemio_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_datamemio_wdata; // @[CGRA.scala 14:53]
-  wire  PE_4_io_datamemio_ren; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_datamemio_raddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_4_io_datamemio_rdata; // @[CGRA.scala 14:53]
-  wire  PE_4_io_datamemio_memoptvalid; // @[CGRA.scala 14:53]
-  wire  PE_5_clock; // @[CGRA.scala 14:53]
-  wire  PE_5_reset; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_inLinks_0; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_inLinks_1; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_inLinks_2; // @[CGRA.scala 14:53]
-  wire  PE_5_io_outLinks_0_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_outLinks_0_bits; // @[CGRA.scala 14:53]
-  wire  PE_5_io_outLinks_1_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_outLinks_1_bits; // @[CGRA.scala 14:53]
-  wire  PE_5_io_outLinks_2_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_outLinks_2_bits; // @[CGRA.scala 14:53]
-  wire  PE_5_io_run; // @[CGRA.scala 14:53]
-  wire  PE_5_io_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_wdata; // @[CGRA.scala 14:53]
-  wire  PE_5_io_finish; // @[CGRA.scala 14:53]
-  wire  PE_5_io_datamemio_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_datamemio_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_datamemio_wdata; // @[CGRA.scala 14:53]
-  wire  PE_5_io_datamemio_ren; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_datamemio_raddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_5_io_datamemio_rdata; // @[CGRA.scala 14:53]
-  wire  PE_5_io_datamemio_memoptvalid; // @[CGRA.scala 14:53]
-  wire  PE_6_clock; // @[CGRA.scala 14:53]
-  wire  PE_6_reset; // @[CGRA.scala 14:53]
-  wire [31:0] PE_6_io_inLinks_1; // @[CGRA.scala 14:53]
-  wire [31:0] PE_6_io_inLinks_3; // @[CGRA.scala 14:53]
-  wire  PE_6_io_outLinks_1_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_6_io_outLinks_1_bits; // @[CGRA.scala 14:53]
-  wire  PE_6_io_outLinks_3_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_6_io_outLinks_3_bits; // @[CGRA.scala 14:53]
-  wire  PE_6_io_run; // @[CGRA.scala 14:53]
-  wire  PE_6_io_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_6_io_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_6_io_wdata; // @[CGRA.scala 14:53]
-  wire  PE_6_io_finish; // @[CGRA.scala 14:53]
-  wire  PE_6_io_datamemio_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_6_io_datamemio_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_6_io_datamemio_wdata; // @[CGRA.scala 14:53]
-  wire  PE_6_io_datamemio_ren; // @[CGRA.scala 14:53]
-  wire [31:0] PE_6_io_datamemio_raddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_6_io_datamemio_rdata; // @[CGRA.scala 14:53]
-  wire  PE_6_io_datamemio_memoptvalid; // @[CGRA.scala 14:53]
-  wire  PE_7_clock; // @[CGRA.scala 14:53]
-  wire  PE_7_reset; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_inLinks_1; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_inLinks_2; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_inLinks_3; // @[CGRA.scala 14:53]
-  wire  PE_7_io_outLinks_1_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_outLinks_1_bits; // @[CGRA.scala 14:53]
-  wire  PE_7_io_outLinks_2_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_outLinks_2_bits; // @[CGRA.scala 14:53]
-  wire  PE_7_io_outLinks_3_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_outLinks_3_bits; // @[CGRA.scala 14:53]
-  wire  PE_7_io_run; // @[CGRA.scala 14:53]
-  wire  PE_7_io_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_wdata; // @[CGRA.scala 14:53]
-  wire  PE_7_io_finish; // @[CGRA.scala 14:53]
-  wire  PE_7_io_datamemio_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_datamemio_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_datamemio_wdata; // @[CGRA.scala 14:53]
-  wire  PE_7_io_datamemio_ren; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_datamemio_raddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_7_io_datamemio_rdata; // @[CGRA.scala 14:53]
-  wire  PE_7_io_datamemio_memoptvalid; // @[CGRA.scala 14:53]
-  wire  PE_8_clock; // @[CGRA.scala 14:53]
-  wire  PE_8_reset; // @[CGRA.scala 14:53]
-  wire [31:0] PE_8_io_inLinks_1; // @[CGRA.scala 14:53]
-  wire [31:0] PE_8_io_inLinks_2; // @[CGRA.scala 14:53]
-  wire  PE_8_io_outLinks_1_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_8_io_outLinks_1_bits; // @[CGRA.scala 14:53]
-  wire  PE_8_io_outLinks_2_valid; // @[CGRA.scala 14:53]
-  wire [31:0] PE_8_io_outLinks_2_bits; // @[CGRA.scala 14:53]
-  wire  PE_8_io_run; // @[CGRA.scala 14:53]
-  wire  PE_8_io_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_8_io_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_8_io_wdata; // @[CGRA.scala 14:53]
-  wire  PE_8_io_finish; // @[CGRA.scala 14:53]
-  wire  PE_8_io_datamemio_wen; // @[CGRA.scala 14:53]
-  wire [31:0] PE_8_io_datamemio_waddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_8_io_datamemio_wdata; // @[CGRA.scala 14:53]
-  wire  PE_8_io_datamemio_ren; // @[CGRA.scala 14:53]
-  wire [31:0] PE_8_io_datamemio_raddr; // @[CGRA.scala 14:53]
-  wire [31:0] PE_8_io_datamemio_rdata; // @[CGRA.scala 14:53]
-  wire  PE_8_io_datamemio_memoptvalid; // @[CGRA.scala 14:53]
-  wire  Link_clock; // @[CGRA.scala 15:89]
-  wire  Link_reset; // @[CGRA.scala 15:89]
-  wire  Link_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_io_out; // @[CGRA.scala 15:89]
-  wire  Link_1_clock; // @[CGRA.scala 15:89]
-  wire  Link_1_reset; // @[CGRA.scala 15:89]
-  wire  Link_1_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_1_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_1_io_out; // @[CGRA.scala 15:89]
-  wire  Link_2_clock; // @[CGRA.scala 15:89]
-  wire  Link_2_reset; // @[CGRA.scala 15:89]
-  wire  Link_2_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_2_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_2_io_out; // @[CGRA.scala 15:89]
-  wire  Link_3_clock; // @[CGRA.scala 15:89]
-  wire  Link_3_reset; // @[CGRA.scala 15:89]
-  wire  Link_3_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_3_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_3_io_out; // @[CGRA.scala 15:89]
-  wire  Link_4_clock; // @[CGRA.scala 15:89]
-  wire  Link_4_reset; // @[CGRA.scala 15:89]
-  wire  Link_4_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_4_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_4_io_out; // @[CGRA.scala 15:89]
-  wire  Link_5_clock; // @[CGRA.scala 15:89]
-  wire  Link_5_reset; // @[CGRA.scala 15:89]
-  wire  Link_5_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_5_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_5_io_out; // @[CGRA.scala 15:89]
-  wire  Link_6_clock; // @[CGRA.scala 15:89]
-  wire  Link_6_reset; // @[CGRA.scala 15:89]
-  wire  Link_6_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_6_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_6_io_out; // @[CGRA.scala 15:89]
-  wire  Link_7_clock; // @[CGRA.scala 15:89]
-  wire  Link_7_reset; // @[CGRA.scala 15:89]
-  wire  Link_7_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_7_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_7_io_out; // @[CGRA.scala 15:89]
-  wire  Link_8_clock; // @[CGRA.scala 15:89]
-  wire  Link_8_reset; // @[CGRA.scala 15:89]
-  wire  Link_8_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_8_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_8_io_out; // @[CGRA.scala 15:89]
-  wire  Link_9_clock; // @[CGRA.scala 15:89]
-  wire  Link_9_reset; // @[CGRA.scala 15:89]
-  wire  Link_9_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_9_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_9_io_out; // @[CGRA.scala 15:89]
-  wire  Link_10_clock; // @[CGRA.scala 15:89]
-  wire  Link_10_reset; // @[CGRA.scala 15:89]
-  wire  Link_10_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_10_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_10_io_out; // @[CGRA.scala 15:89]
-  wire  Link_11_clock; // @[CGRA.scala 15:89]
-  wire  Link_11_reset; // @[CGRA.scala 15:89]
-  wire  Link_11_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_11_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_11_io_out; // @[CGRA.scala 15:89]
-  wire  Link_12_clock; // @[CGRA.scala 15:89]
-  wire  Link_12_reset; // @[CGRA.scala 15:89]
-  wire  Link_12_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_12_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_12_io_out; // @[CGRA.scala 15:89]
-  wire  Link_13_clock; // @[CGRA.scala 15:89]
-  wire  Link_13_reset; // @[CGRA.scala 15:89]
-  wire  Link_13_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_13_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_13_io_out; // @[CGRA.scala 15:89]
-  wire  Link_14_clock; // @[CGRA.scala 15:89]
-  wire  Link_14_reset; // @[CGRA.scala 15:89]
-  wire  Link_14_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_14_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_14_io_out; // @[CGRA.scala 15:89]
-  wire  Link_15_clock; // @[CGRA.scala 15:89]
-  wire  Link_15_reset; // @[CGRA.scala 15:89]
-  wire  Link_15_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_15_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_15_io_out; // @[CGRA.scala 15:89]
-  wire  Link_16_clock; // @[CGRA.scala 15:89]
-  wire  Link_16_reset; // @[CGRA.scala 15:89]
-  wire  Link_16_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_16_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_16_io_out; // @[CGRA.scala 15:89]
-  wire  Link_17_clock; // @[CGRA.scala 15:89]
-  wire  Link_17_reset; // @[CGRA.scala 15:89]
-  wire  Link_17_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_17_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_17_io_out; // @[CGRA.scala 15:89]
-  wire  Link_18_clock; // @[CGRA.scala 15:89]
-  wire  Link_18_reset; // @[CGRA.scala 15:89]
-  wire  Link_18_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_18_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_18_io_out; // @[CGRA.scala 15:89]
-  wire  Link_19_clock; // @[CGRA.scala 15:89]
-  wire  Link_19_reset; // @[CGRA.scala 15:89]
-  wire  Link_19_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_19_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_19_io_out; // @[CGRA.scala 15:89]
-  wire  Link_20_clock; // @[CGRA.scala 15:89]
-  wire  Link_20_reset; // @[CGRA.scala 15:89]
-  wire  Link_20_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_20_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_20_io_out; // @[CGRA.scala 15:89]
-  wire  Link_21_clock; // @[CGRA.scala 15:89]
-  wire  Link_21_reset; // @[CGRA.scala 15:89]
-  wire  Link_21_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_21_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_21_io_out; // @[CGRA.scala 15:89]
-  wire  Link_22_clock; // @[CGRA.scala 15:89]
-  wire  Link_22_reset; // @[CGRA.scala 15:89]
-  wire  Link_22_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_22_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_22_io_out; // @[CGRA.scala 15:89]
-  wire  Link_23_clock; // @[CGRA.scala 15:89]
-  wire  Link_23_reset; // @[CGRA.scala 15:89]
-  wire  Link_23_io_in_valid; // @[CGRA.scala 15:89]
-  wire [31:0] Link_23_io_in_bits; // @[CGRA.scala 15:89]
-  wire [31:0] Link_23_io_out; // @[CGRA.scala 15:89]
-  wire  Datamem_clock; // @[CGRA.scala 16:54]
-  wire  Datamem_io_wen; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_io_waddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_io_wdata; // @[CGRA.scala 16:54]
-  wire  Datamem_io_ren; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_io_raddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_io_rdata; // @[CGRA.scala 16:54]
-  wire  Datamem_io_memoptvalid; // @[CGRA.scala 16:54]
-  wire  Datamem_1_clock; // @[CGRA.scala 16:54]
-  wire  Datamem_1_io_wen; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_1_io_waddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_1_io_wdata; // @[CGRA.scala 16:54]
-  wire  Datamem_1_io_ren; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_1_io_raddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_1_io_rdata; // @[CGRA.scala 16:54]
-  wire  Datamem_1_io_memoptvalid; // @[CGRA.scala 16:54]
-  wire  Datamem_2_clock; // @[CGRA.scala 16:54]
-  wire  Datamem_2_io_wen; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_2_io_waddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_2_io_wdata; // @[CGRA.scala 16:54]
-  wire  Datamem_2_io_ren; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_2_io_raddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_2_io_rdata; // @[CGRA.scala 16:54]
-  wire  Datamem_2_io_memoptvalid; // @[CGRA.scala 16:54]
-  wire  Datamem_3_clock; // @[CGRA.scala 16:54]
-  wire  Datamem_3_io_wen; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_3_io_waddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_3_io_wdata; // @[CGRA.scala 16:54]
-  wire  Datamem_3_io_ren; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_3_io_raddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_3_io_rdata; // @[CGRA.scala 16:54]
-  wire  Datamem_3_io_memoptvalid; // @[CGRA.scala 16:54]
-  wire  Datamem_4_clock; // @[CGRA.scala 16:54]
-  wire  Datamem_4_io_wen; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_4_io_waddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_4_io_wdata; // @[CGRA.scala 16:54]
-  wire  Datamem_4_io_ren; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_4_io_raddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_4_io_rdata; // @[CGRA.scala 16:54]
-  wire  Datamem_4_io_memoptvalid; // @[CGRA.scala 16:54]
-  wire  Datamem_5_clock; // @[CGRA.scala 16:54]
-  wire  Datamem_5_io_wen; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_5_io_waddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_5_io_wdata; // @[CGRA.scala 16:54]
-  wire  Datamem_5_io_ren; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_5_io_raddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_5_io_rdata; // @[CGRA.scala 16:54]
-  wire  Datamem_5_io_memoptvalid; // @[CGRA.scala 16:54]
-  wire  Datamem_6_clock; // @[CGRA.scala 16:54]
-  wire  Datamem_6_io_wen; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_6_io_waddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_6_io_wdata; // @[CGRA.scala 16:54]
-  wire  Datamem_6_io_ren; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_6_io_raddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_6_io_rdata; // @[CGRA.scala 16:54]
-  wire  Datamem_6_io_memoptvalid; // @[CGRA.scala 16:54]
-  wire  Datamem_7_clock; // @[CGRA.scala 16:54]
-  wire  Datamem_7_io_wen; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_7_io_waddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_7_io_wdata; // @[CGRA.scala 16:54]
-  wire  Datamem_7_io_ren; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_7_io_raddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_7_io_rdata; // @[CGRA.scala 16:54]
-  wire  Datamem_7_io_memoptvalid; // @[CGRA.scala 16:54]
-  wire  Datamem_8_clock; // @[CGRA.scala 16:54]
-  wire  Datamem_8_io_wen; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_8_io_waddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_8_io_wdata; // @[CGRA.scala 16:54]
-  wire  Datamem_8_io_ren; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_8_io_raddr; // @[CGRA.scala 16:54]
-  wire [31:0] Datamem_8_io_rdata; // @[CGRA.scala 16:54]
-  wire  Datamem_8_io_memoptvalid; // @[CGRA.scala 16:54]
-  reg [31:0] ctrlregs_0; // @[CGRA.scala 18:27]
-  reg [31:0] ctrlregs_1; // @[CGRA.scala 18:27]
-  reg [31:0] ctrlregs_2; // @[CGRA.scala 18:27]
-  reg [31:0] ctrlregs_3; // @[CGRA.scala 18:27]
-  reg [31:0] ctrlregs_4; // @[CGRA.scala 18:27]
-  reg [31:0] configwaddr; // @[CGRA.scala 22:30]
-  reg [31:0] configPEcnt; // @[CGRA.scala 23:30]
-  wire  _T_129 = ctrlregs_0 == 32'h1; // @[CGRA.scala 159:33]
-  wire  configwen = ctrlregs_0 == 32'h1 & io_axistream_s_valid & io_axistream_s_ready; // @[CGRA.scala 159:77]
-  wire  _T_16 = configPEcnt == 32'h8; // @[CGRA.scala 37:53]
-  wire  _T_18 = ctrlregs_0 == 32'h2; // @[CGRA.scala 45:58]
-  wire  _T_20 = ctrlregs_0 == 32'h2 & io_axistream_s_valid & io_axistream_s_ready; // @[CGRA.scala 45:103]
-  wire [31:0] _T_25 = ctrlregs_3 + ctrlregs_4; // @[CGRA.scala 46:118]
+  wire  PE_clock; // @[CGRA.scala 15:53]
+  wire  PE_reset; // @[CGRA.scala 15:53]
+  wire [31:0] PE_io_inLinks_0; // @[CGRA.scala 15:53]
+  wire [31:0] PE_io_inLinks_3; // @[CGRA.scala 15:53]
+  wire  PE_io_outLinks_0_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_io_outLinks_0_bits; // @[CGRA.scala 15:53]
+  wire  PE_io_outLinks_3_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_io_outLinks_3_bits; // @[CGRA.scala 15:53]
+  wire  PE_io_run; // @[CGRA.scala 15:53]
+  wire  PE_io_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_io_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_io_wdata; // @[CGRA.scala 15:53]
+  wire  PE_io_finish; // @[CGRA.scala 15:53]
+  wire  PE_io_datamemio_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_io_datamemio_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_io_datamemio_wdata; // @[CGRA.scala 15:53]
+  wire  PE_io_datamemio_ren; // @[CGRA.scala 15:53]
+  wire [31:0] PE_io_datamemio_raddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_io_datamemio_rdata; // @[CGRA.scala 15:53]
+  wire  PE_io_datamemio_memoptvalid; // @[CGRA.scala 15:53]
+  wire  PE_1_clock; // @[CGRA.scala 15:53]
+  wire  PE_1_reset; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_inLinks_0; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_inLinks_2; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_inLinks_3; // @[CGRA.scala 15:53]
+  wire  PE_1_io_outLinks_0_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_outLinks_0_bits; // @[CGRA.scala 15:53]
+  wire  PE_1_io_outLinks_2_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_outLinks_2_bits; // @[CGRA.scala 15:53]
+  wire  PE_1_io_outLinks_3_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_outLinks_3_bits; // @[CGRA.scala 15:53]
+  wire  PE_1_io_run; // @[CGRA.scala 15:53]
+  wire  PE_1_io_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_wdata; // @[CGRA.scala 15:53]
+  wire  PE_1_io_finish; // @[CGRA.scala 15:53]
+  wire  PE_1_io_datamemio_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_datamemio_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_datamemio_wdata; // @[CGRA.scala 15:53]
+  wire  PE_1_io_datamemio_ren; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_datamemio_raddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_1_io_datamemio_rdata; // @[CGRA.scala 15:53]
+  wire  PE_1_io_datamemio_memoptvalid; // @[CGRA.scala 15:53]
+  wire  PE_2_clock; // @[CGRA.scala 15:53]
+  wire  PE_2_reset; // @[CGRA.scala 15:53]
+  wire [31:0] PE_2_io_inLinks_0; // @[CGRA.scala 15:53]
+  wire [31:0] PE_2_io_inLinks_2; // @[CGRA.scala 15:53]
+  wire  PE_2_io_outLinks_0_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_2_io_outLinks_0_bits; // @[CGRA.scala 15:53]
+  wire  PE_2_io_outLinks_2_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_2_io_outLinks_2_bits; // @[CGRA.scala 15:53]
+  wire  PE_2_io_run; // @[CGRA.scala 15:53]
+  wire  PE_2_io_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_2_io_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_2_io_wdata; // @[CGRA.scala 15:53]
+  wire  PE_2_io_finish; // @[CGRA.scala 15:53]
+  wire  PE_2_io_datamemio_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_2_io_datamemio_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_2_io_datamemio_wdata; // @[CGRA.scala 15:53]
+  wire  PE_2_io_datamemio_ren; // @[CGRA.scala 15:53]
+  wire [31:0] PE_2_io_datamemio_raddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_2_io_datamemio_rdata; // @[CGRA.scala 15:53]
+  wire  PE_2_io_datamemio_memoptvalid; // @[CGRA.scala 15:53]
+  wire  PE_3_clock; // @[CGRA.scala 15:53]
+  wire  PE_3_reset; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_inLinks_0; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_inLinks_1; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_inLinks_3; // @[CGRA.scala 15:53]
+  wire  PE_3_io_outLinks_0_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_outLinks_0_bits; // @[CGRA.scala 15:53]
+  wire  PE_3_io_outLinks_1_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_outLinks_1_bits; // @[CGRA.scala 15:53]
+  wire  PE_3_io_outLinks_3_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_outLinks_3_bits; // @[CGRA.scala 15:53]
+  wire  PE_3_io_run; // @[CGRA.scala 15:53]
+  wire  PE_3_io_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_wdata; // @[CGRA.scala 15:53]
+  wire  PE_3_io_finish; // @[CGRA.scala 15:53]
+  wire  PE_3_io_datamemio_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_datamemio_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_datamemio_wdata; // @[CGRA.scala 15:53]
+  wire  PE_3_io_datamemio_ren; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_datamemio_raddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_3_io_datamemio_rdata; // @[CGRA.scala 15:53]
+  wire  PE_3_io_datamemio_memoptvalid; // @[CGRA.scala 15:53]
+  wire  PE_4_clock; // @[CGRA.scala 15:53]
+  wire  PE_4_reset; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_inLinks_0; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_inLinks_1; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_inLinks_2; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_inLinks_3; // @[CGRA.scala 15:53]
+  wire  PE_4_io_outLinks_0_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_outLinks_0_bits; // @[CGRA.scala 15:53]
+  wire  PE_4_io_outLinks_1_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_outLinks_1_bits; // @[CGRA.scala 15:53]
+  wire  PE_4_io_outLinks_2_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_outLinks_2_bits; // @[CGRA.scala 15:53]
+  wire  PE_4_io_outLinks_3_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_outLinks_3_bits; // @[CGRA.scala 15:53]
+  wire  PE_4_io_run; // @[CGRA.scala 15:53]
+  wire  PE_4_io_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_wdata; // @[CGRA.scala 15:53]
+  wire  PE_4_io_finish; // @[CGRA.scala 15:53]
+  wire  PE_4_io_datamemio_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_datamemio_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_datamemio_wdata; // @[CGRA.scala 15:53]
+  wire  PE_4_io_datamemio_ren; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_datamemio_raddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_4_io_datamemio_rdata; // @[CGRA.scala 15:53]
+  wire  PE_4_io_datamemio_memoptvalid; // @[CGRA.scala 15:53]
+  wire  PE_5_clock; // @[CGRA.scala 15:53]
+  wire  PE_5_reset; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_inLinks_0; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_inLinks_1; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_inLinks_2; // @[CGRA.scala 15:53]
+  wire  PE_5_io_outLinks_0_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_outLinks_0_bits; // @[CGRA.scala 15:53]
+  wire  PE_5_io_outLinks_1_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_outLinks_1_bits; // @[CGRA.scala 15:53]
+  wire  PE_5_io_outLinks_2_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_outLinks_2_bits; // @[CGRA.scala 15:53]
+  wire  PE_5_io_run; // @[CGRA.scala 15:53]
+  wire  PE_5_io_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_wdata; // @[CGRA.scala 15:53]
+  wire  PE_5_io_finish; // @[CGRA.scala 15:53]
+  wire  PE_5_io_datamemio_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_datamemio_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_datamemio_wdata; // @[CGRA.scala 15:53]
+  wire  PE_5_io_datamemio_ren; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_datamemio_raddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_5_io_datamemio_rdata; // @[CGRA.scala 15:53]
+  wire  PE_5_io_datamemio_memoptvalid; // @[CGRA.scala 15:53]
+  wire  PE_6_clock; // @[CGRA.scala 15:53]
+  wire  PE_6_reset; // @[CGRA.scala 15:53]
+  wire [31:0] PE_6_io_inLinks_1; // @[CGRA.scala 15:53]
+  wire [31:0] PE_6_io_inLinks_3; // @[CGRA.scala 15:53]
+  wire  PE_6_io_outLinks_1_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_6_io_outLinks_1_bits; // @[CGRA.scala 15:53]
+  wire  PE_6_io_outLinks_3_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_6_io_outLinks_3_bits; // @[CGRA.scala 15:53]
+  wire  PE_6_io_run; // @[CGRA.scala 15:53]
+  wire  PE_6_io_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_6_io_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_6_io_wdata; // @[CGRA.scala 15:53]
+  wire  PE_6_io_finish; // @[CGRA.scala 15:53]
+  wire  PE_6_io_datamemio_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_6_io_datamemio_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_6_io_datamemio_wdata; // @[CGRA.scala 15:53]
+  wire  PE_6_io_datamemio_ren; // @[CGRA.scala 15:53]
+  wire [31:0] PE_6_io_datamemio_raddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_6_io_datamemio_rdata; // @[CGRA.scala 15:53]
+  wire  PE_6_io_datamemio_memoptvalid; // @[CGRA.scala 15:53]
+  wire  PE_7_clock; // @[CGRA.scala 15:53]
+  wire  PE_7_reset; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_inLinks_1; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_inLinks_2; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_inLinks_3; // @[CGRA.scala 15:53]
+  wire  PE_7_io_outLinks_1_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_outLinks_1_bits; // @[CGRA.scala 15:53]
+  wire  PE_7_io_outLinks_2_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_outLinks_2_bits; // @[CGRA.scala 15:53]
+  wire  PE_7_io_outLinks_3_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_outLinks_3_bits; // @[CGRA.scala 15:53]
+  wire  PE_7_io_run; // @[CGRA.scala 15:53]
+  wire  PE_7_io_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_wdata; // @[CGRA.scala 15:53]
+  wire  PE_7_io_finish; // @[CGRA.scala 15:53]
+  wire  PE_7_io_datamemio_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_datamemio_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_datamemio_wdata; // @[CGRA.scala 15:53]
+  wire  PE_7_io_datamemio_ren; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_datamemio_raddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_7_io_datamemio_rdata; // @[CGRA.scala 15:53]
+  wire  PE_7_io_datamemio_memoptvalid; // @[CGRA.scala 15:53]
+  wire  PE_8_clock; // @[CGRA.scala 15:53]
+  wire  PE_8_reset; // @[CGRA.scala 15:53]
+  wire [31:0] PE_8_io_inLinks_1; // @[CGRA.scala 15:53]
+  wire [31:0] PE_8_io_inLinks_2; // @[CGRA.scala 15:53]
+  wire  PE_8_io_outLinks_1_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_8_io_outLinks_1_bits; // @[CGRA.scala 15:53]
+  wire  PE_8_io_outLinks_2_valid; // @[CGRA.scala 15:53]
+  wire [31:0] PE_8_io_outLinks_2_bits; // @[CGRA.scala 15:53]
+  wire  PE_8_io_run; // @[CGRA.scala 15:53]
+  wire  PE_8_io_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_8_io_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_8_io_wdata; // @[CGRA.scala 15:53]
+  wire  PE_8_io_finish; // @[CGRA.scala 15:53]
+  wire  PE_8_io_datamemio_wen; // @[CGRA.scala 15:53]
+  wire [31:0] PE_8_io_datamemio_waddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_8_io_datamemio_wdata; // @[CGRA.scala 15:53]
+  wire  PE_8_io_datamemio_ren; // @[CGRA.scala 15:53]
+  wire [31:0] PE_8_io_datamemio_raddr; // @[CGRA.scala 15:53]
+  wire [31:0] PE_8_io_datamemio_rdata; // @[CGRA.scala 15:53]
+  wire  PE_8_io_datamemio_memoptvalid; // @[CGRA.scala 15:53]
+  wire  Link_clock; // @[CGRA.scala 16:89]
+  wire  Link_reset; // @[CGRA.scala 16:89]
+  wire  Link_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_io_out; // @[CGRA.scala 16:89]
+  wire  Link_1_clock; // @[CGRA.scala 16:89]
+  wire  Link_1_reset; // @[CGRA.scala 16:89]
+  wire  Link_1_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_1_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_1_io_out; // @[CGRA.scala 16:89]
+  wire  Link_2_clock; // @[CGRA.scala 16:89]
+  wire  Link_2_reset; // @[CGRA.scala 16:89]
+  wire  Link_2_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_2_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_2_io_out; // @[CGRA.scala 16:89]
+  wire  Link_3_clock; // @[CGRA.scala 16:89]
+  wire  Link_3_reset; // @[CGRA.scala 16:89]
+  wire  Link_3_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_3_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_3_io_out; // @[CGRA.scala 16:89]
+  wire  Link_4_clock; // @[CGRA.scala 16:89]
+  wire  Link_4_reset; // @[CGRA.scala 16:89]
+  wire  Link_4_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_4_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_4_io_out; // @[CGRA.scala 16:89]
+  wire  Link_5_clock; // @[CGRA.scala 16:89]
+  wire  Link_5_reset; // @[CGRA.scala 16:89]
+  wire  Link_5_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_5_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_5_io_out; // @[CGRA.scala 16:89]
+  wire  Link_6_clock; // @[CGRA.scala 16:89]
+  wire  Link_6_reset; // @[CGRA.scala 16:89]
+  wire  Link_6_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_6_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_6_io_out; // @[CGRA.scala 16:89]
+  wire  Link_7_clock; // @[CGRA.scala 16:89]
+  wire  Link_7_reset; // @[CGRA.scala 16:89]
+  wire  Link_7_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_7_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_7_io_out; // @[CGRA.scala 16:89]
+  wire  Link_8_clock; // @[CGRA.scala 16:89]
+  wire  Link_8_reset; // @[CGRA.scala 16:89]
+  wire  Link_8_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_8_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_8_io_out; // @[CGRA.scala 16:89]
+  wire  Link_9_clock; // @[CGRA.scala 16:89]
+  wire  Link_9_reset; // @[CGRA.scala 16:89]
+  wire  Link_9_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_9_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_9_io_out; // @[CGRA.scala 16:89]
+  wire  Link_10_clock; // @[CGRA.scala 16:89]
+  wire  Link_10_reset; // @[CGRA.scala 16:89]
+  wire  Link_10_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_10_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_10_io_out; // @[CGRA.scala 16:89]
+  wire  Link_11_clock; // @[CGRA.scala 16:89]
+  wire  Link_11_reset; // @[CGRA.scala 16:89]
+  wire  Link_11_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_11_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_11_io_out; // @[CGRA.scala 16:89]
+  wire  Link_12_clock; // @[CGRA.scala 16:89]
+  wire  Link_12_reset; // @[CGRA.scala 16:89]
+  wire  Link_12_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_12_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_12_io_out; // @[CGRA.scala 16:89]
+  wire  Link_13_clock; // @[CGRA.scala 16:89]
+  wire  Link_13_reset; // @[CGRA.scala 16:89]
+  wire  Link_13_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_13_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_13_io_out; // @[CGRA.scala 16:89]
+  wire  Link_14_clock; // @[CGRA.scala 16:89]
+  wire  Link_14_reset; // @[CGRA.scala 16:89]
+  wire  Link_14_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_14_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_14_io_out; // @[CGRA.scala 16:89]
+  wire  Link_15_clock; // @[CGRA.scala 16:89]
+  wire  Link_15_reset; // @[CGRA.scala 16:89]
+  wire  Link_15_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_15_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_15_io_out; // @[CGRA.scala 16:89]
+  wire  Link_16_clock; // @[CGRA.scala 16:89]
+  wire  Link_16_reset; // @[CGRA.scala 16:89]
+  wire  Link_16_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_16_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_16_io_out; // @[CGRA.scala 16:89]
+  wire  Link_17_clock; // @[CGRA.scala 16:89]
+  wire  Link_17_reset; // @[CGRA.scala 16:89]
+  wire  Link_17_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_17_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_17_io_out; // @[CGRA.scala 16:89]
+  wire  Link_18_clock; // @[CGRA.scala 16:89]
+  wire  Link_18_reset; // @[CGRA.scala 16:89]
+  wire  Link_18_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_18_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_18_io_out; // @[CGRA.scala 16:89]
+  wire  Link_19_clock; // @[CGRA.scala 16:89]
+  wire  Link_19_reset; // @[CGRA.scala 16:89]
+  wire  Link_19_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_19_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_19_io_out; // @[CGRA.scala 16:89]
+  wire  Link_20_clock; // @[CGRA.scala 16:89]
+  wire  Link_20_reset; // @[CGRA.scala 16:89]
+  wire  Link_20_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_20_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_20_io_out; // @[CGRA.scala 16:89]
+  wire  Link_21_clock; // @[CGRA.scala 16:89]
+  wire  Link_21_reset; // @[CGRA.scala 16:89]
+  wire  Link_21_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_21_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_21_io_out; // @[CGRA.scala 16:89]
+  wire  Link_22_clock; // @[CGRA.scala 16:89]
+  wire  Link_22_reset; // @[CGRA.scala 16:89]
+  wire  Link_22_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_22_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_22_io_out; // @[CGRA.scala 16:89]
+  wire  Link_23_clock; // @[CGRA.scala 16:89]
+  wire  Link_23_reset; // @[CGRA.scala 16:89]
+  wire  Link_23_io_in_valid; // @[CGRA.scala 16:89]
+  wire [31:0] Link_23_io_in_bits; // @[CGRA.scala 16:89]
+  wire [31:0] Link_23_io_out; // @[CGRA.scala 16:89]
+  wire  Datamem_clock; // @[CGRA.scala 17:54]
+  wire  Datamem_io_wen; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_io_waddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_io_wdata; // @[CGRA.scala 17:54]
+  wire  Datamem_io_ren; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_io_raddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_io_rdata; // @[CGRA.scala 17:54]
+  wire  Datamem_io_memoptvalid; // @[CGRA.scala 17:54]
+  wire  Datamem_1_clock; // @[CGRA.scala 17:54]
+  wire  Datamem_1_io_wen; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_1_io_waddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_1_io_wdata; // @[CGRA.scala 17:54]
+  wire  Datamem_1_io_ren; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_1_io_raddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_1_io_rdata; // @[CGRA.scala 17:54]
+  wire  Datamem_1_io_memoptvalid; // @[CGRA.scala 17:54]
+  wire  Datamem_2_clock; // @[CGRA.scala 17:54]
+  wire  Datamem_2_io_wen; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_2_io_waddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_2_io_wdata; // @[CGRA.scala 17:54]
+  wire  Datamem_2_io_ren; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_2_io_raddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_2_io_rdata; // @[CGRA.scala 17:54]
+  wire  Datamem_2_io_memoptvalid; // @[CGRA.scala 17:54]
+  wire  Datamem_3_clock; // @[CGRA.scala 17:54]
+  wire  Datamem_3_io_wen; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_3_io_waddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_3_io_wdata; // @[CGRA.scala 17:54]
+  wire  Datamem_3_io_ren; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_3_io_raddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_3_io_rdata; // @[CGRA.scala 17:54]
+  wire  Datamem_3_io_memoptvalid; // @[CGRA.scala 17:54]
+  wire  Datamem_4_clock; // @[CGRA.scala 17:54]
+  wire  Datamem_4_io_wen; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_4_io_waddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_4_io_wdata; // @[CGRA.scala 17:54]
+  wire  Datamem_4_io_ren; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_4_io_raddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_4_io_rdata; // @[CGRA.scala 17:54]
+  wire  Datamem_4_io_memoptvalid; // @[CGRA.scala 17:54]
+  wire  Datamem_5_clock; // @[CGRA.scala 17:54]
+  wire  Datamem_5_io_wen; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_5_io_waddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_5_io_wdata; // @[CGRA.scala 17:54]
+  wire  Datamem_5_io_ren; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_5_io_raddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_5_io_rdata; // @[CGRA.scala 17:54]
+  wire  Datamem_5_io_memoptvalid; // @[CGRA.scala 17:54]
+  wire  Datamem_6_clock; // @[CGRA.scala 17:54]
+  wire  Datamem_6_io_wen; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_6_io_waddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_6_io_wdata; // @[CGRA.scala 17:54]
+  wire  Datamem_6_io_ren; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_6_io_raddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_6_io_rdata; // @[CGRA.scala 17:54]
+  wire  Datamem_6_io_memoptvalid; // @[CGRA.scala 17:54]
+  wire  Datamem_7_clock; // @[CGRA.scala 17:54]
+  wire  Datamem_7_io_wen; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_7_io_waddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_7_io_wdata; // @[CGRA.scala 17:54]
+  wire  Datamem_7_io_ren; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_7_io_raddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_7_io_rdata; // @[CGRA.scala 17:54]
+  wire  Datamem_7_io_memoptvalid; // @[CGRA.scala 17:54]
+  wire  Datamem_8_clock; // @[CGRA.scala 17:54]
+  wire  Datamem_8_io_wen; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_8_io_waddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_8_io_wdata; // @[CGRA.scala 17:54]
+  wire  Datamem_8_io_ren; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_8_io_raddr; // @[CGRA.scala 17:54]
+  wire [31:0] Datamem_8_io_rdata; // @[CGRA.scala 17:54]
+  wire  Datamem_8_io_memoptvalid; // @[CGRA.scala 17:54]
+  reg [31:0] ctrlregs_0; // @[CGRA.scala 19:27]
+  reg [31:0] ctrlregs_1; // @[CGRA.scala 19:27]
+  reg [31:0] ctrlregs_2; // @[CGRA.scala 19:27]
+  reg [31:0] ctrlregs_3; // @[CGRA.scala 19:27]
+  reg [31:0] ctrlregs_4; // @[CGRA.scala 19:27]
+  reg [31:0] ctrlregs_5; // @[CGRA.scala 19:27]
+  reg [31:0] configwaddr; // @[CGRA.scala 23:30]
+  reg [31:0] configPEcnt; // @[CGRA.scala 24:30]
+  wire  _T_219 = ctrlregs_0 == 32'h1; // @[CGRA.scala 165:33]
+  wire  configwen = ctrlregs_0 == 32'h1 & io_axistream_s_valid & io_axistream_s_ready; // @[CGRA.scala 165:77]
+  wire  _T_16 = configPEcnt == 32'h8; // @[CGRA.scala 40:53]
+  wire  _T_18 = ctrlregs_0 == 32'h2; // @[CGRA.scala 48:58]
+  wire  _T_20 = ctrlregs_0 == 32'h2 & io_axistream_s_valid & io_axistream_s_ready; // @[CGRA.scala 48:103]
+  wire [31:0] _T_25 = ctrlregs_3 + ctrlregs_4; // @[CGRA.scala 49:118]
+  wire  _T_29 = ctrlregs_0 == 32'h4; // @[CGRA.scala 52:59]
+  wire  _T_32 = io_axistream_m_valid & io_axistream_m_ready; // @[CGRA.scala 52:181]
+  wire [31:0] _GEN_139 = {{31'd0}, _T_32}; // @[CGRA.scala 52:154]
+  wire [31:0] _T_35 = _T_25 + _GEN_139; // @[CGRA.scala 52:154]
   wire  cgrafinish = PE_io_finish & PE_1_io_finish & PE_2_io_finish & PE_3_io_finish & PE_4_io_finish & PE_5_io_finish
-     & PE_6_io_finish & PE_7_io_finish & PE_8_io_finish; // @[CGRA.scala 78:49]
-  reg [1:0] statew; // @[CGRA.scala 83:23]
-  reg [1:0] stater; // @[CGRA.scala 84:23]
-  reg [31:0] currentAddressr; // @[CGRA.scala 85:32]
-  reg [31:0] currentAddressw; // @[CGRA.scala 86:32]
+     & PE_6_io_finish & PE_7_io_finish & PE_8_io_finish; // @[CGRA.scala 84:49]
+  reg [1:0] statew; // @[CGRA.scala 89:23]
+  reg [1:0] stater; // @[CGRA.scala 90:23]
+  reg [31:0] currentAddressr; // @[CGRA.scala 91:32]
+  reg [31:0] currentAddressw; // @[CGRA.scala 92:32]
   wire [7:0] _mask_T_2 = io_axilite_s_wstrb[3] ? 8'hff : 8'h0; // @[Bitwise.scala 77:12]
   wire [7:0] _mask_T_5 = io_axilite_s_wstrb[2] ? 8'hff : 8'h0; // @[Bitwise.scala 77:12]
   wire [7:0] _mask_T_8 = io_axilite_s_wstrb[1] ? 8'hff : 8'h0; // @[Bitwise.scala 77:12]
   wire [7:0] _mask_T_11 = io_axilite_s_wstrb[0] ? 8'hff : 8'h0; // @[Bitwise.scala 77:12]
   wire [31:0] mask = {_mask_T_2,_mask_T_5,_mask_T_8,_mask_T_11}; // @[Cat.scala 33:92]
-  wire [31:0] _currentAddressw_T_1 = io_axilite_s_awaddr_bits - 32'h0; // @[CGRA.scala 103:52]
-  wire  _T_120 = io_axilite_s_wdata_valid & io_axilite_s_wdata_ready; // @[CGRA.scala 108:36]
-  wire [31:0] _ctrlregs_axil_wdata_T_1 = ~mask; // @[CGRA.scala 110:61]
-  wire [31:0] _GEN_3 = 3'h1 == currentAddressw[2:0] ? ctrlregs_1 : ctrlregs_0; // @[CGRA.scala 110:{58,58}]
-  wire [31:0] _GEN_4 = 3'h2 == currentAddressw[2:0] ? ctrlregs_2 : _GEN_3; // @[CGRA.scala 110:{58,58}]
-  wire [31:0] _GEN_5 = 3'h3 == currentAddressw[2:0] ? ctrlregs_3 : _GEN_4; // @[CGRA.scala 110:{58,58}]
-  wire [31:0] _GEN_6 = 3'h4 == currentAddressw[2:0] ? ctrlregs_4 : _GEN_5; // @[CGRA.scala 110:{58,58}]
-  wire [31:0] _ctrlregs_axil_wdata_T_2 = _GEN_6 & _ctrlregs_axil_wdata_T_1; // @[CGRA.scala 110:58]
-  wire [31:0] _ctrlregs_axil_wdata_T_3 = io_axilite_s_wdata_bits & mask; // @[CGRA.scala 110:95]
-  wire [31:0] _ctrlregs_axil_wdata_T_4 = _ctrlregs_axil_wdata_T_2 | _ctrlregs_axil_wdata_T_3; // @[CGRA.scala 110:69]
-  wire [31:0] _GEN_8 = io_axilite_s_wdata_valid & io_axilite_s_wdata_ready ? _ctrlregs_axil_wdata_T_4 : 32'h0; // @[CGRA.scala 108:65 110:29 91:23]
-  wire [1:0] _GEN_12 = io_axilite_s_bresp_ready ? 2'h0 : statew; // @[CGRA.scala 115:38 118:16 83:23]
-  wire [31:0] _GEN_17 = 2'h1 == statew ? _GEN_8 : 32'h0; // @[CGRA.scala 100:18 91:23]
-  wire  _GEN_19 = 2'h1 == statew ? 1'h0 : 2'h2 == statew & io_axilite_s_bresp_ready; // @[CGRA.scala 100:18 93:28]
-  wire  ctrlregs_axil_wen = 2'h0 == statew ? 1'h0 : 2'h1 == statew & _T_120; // @[CGRA.scala 100:18 90:20]
-  wire [31:0] ctrlregs_axil_wdata = 2'h0 == statew ? 32'h0 : _GEN_17; // @[CGRA.scala 100:18 91:23]
-  wire  _io_axilite_s_rdata_valid_T = stater == 2'h1; // @[CGRA.scala 124:37]
-  wire [31:0] _currentAddressr_T_1 = io_axilite_s_araddr_bits - 32'h0; // @[CGRA.scala 128:52]
-  wire [31:0] _GEN_34 = 3'h1 == currentAddressr[2:0] ? ctrlregs_1 : ctrlregs_0; // @[CGRA.scala 138:{33,33}]
-  wire [31:0] _GEN_35 = 3'h2 == currentAddressr[2:0] ? ctrlregs_2 : _GEN_34; // @[CGRA.scala 138:{33,33}]
-  wire [31:0] _GEN_36 = 3'h3 == currentAddressr[2:0] ? ctrlregs_3 : _GEN_35; // @[CGRA.scala 138:{33,33}]
-  wire [31:0] _GEN_37 = 3'h4 == currentAddressr[2:0] ? ctrlregs_4 : _GEN_36; // @[CGRA.scala 138:{33,33}]
-  wire  _config_finish_T = configwaddr == 32'h6c; // @[CGRA.scala 157:33]
-  wire  config_finish = configwaddr == 32'h6c & _T_16; // @[CGRA.scala 157:51]
-  wire [31:0] statenext = _T_129 & config_finish ? 32'h0 : ctrlregs_0; // @[CGRA.scala 147:13 149:81 150:15]
-  wire [31:0] _configwaddrnext_T_2 = configwaddr + 32'h1; // @[CGRA.scala 155:64]
-  wire [31:0] _configPEnext_T_2 = configPEcnt + 32'h1; // @[CGRA.scala 156:75]
-  wire [31:0] configPEnext = configPEcnt < 32'h8 ? _configPEnext_T_2 : 32'h0; // @[CGRA.scala 156:22]
-  wire [31:0] _T_134 = ctrlregs_4 + 32'h1; // @[CGRA.scala 177:85]
-  wire [31:0] _GEN_44 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_0; // @[CGRA.scala 18:27 183:{35,35}]
-  wire [31:0] _GEN_45 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_1; // @[CGRA.scala 18:27 183:{35,35}]
-  wire [31:0] _GEN_46 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_2; // @[CGRA.scala 18:27 183:{35,35}]
-  wire [31:0] _GEN_47 = 3'h3 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_3; // @[CGRA.scala 18:27 183:{35,35}]
-  wire [31:0] _GEN_48 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_4; // @[CGRA.scala 18:27 183:{35,35}]
-  wire [31:0] _GEN_49 = config_finish ? statenext : ctrlregs_0; // @[CGRA.scala 184:46 185:21 18:27]
-  wire [31:0] _GEN_50 = ctrlregs_axil_wen ? _GEN_44 : _GEN_49; // @[CGRA.scala 182:30]
-  wire [31:0] _GEN_51 = ctrlregs_axil_wen ? _GEN_45 : ctrlregs_1; // @[CGRA.scala 18:27 182:30]
-  wire [31:0] _GEN_52 = ctrlregs_axil_wen ? _GEN_46 : ctrlregs_2; // @[CGRA.scala 18:27 182:30]
-  wire [31:0] _GEN_53 = ctrlregs_axil_wen ? _GEN_47 : ctrlregs_3; // @[CGRA.scala 18:27 182:30]
-  wire [31:0] _GEN_54 = ctrlregs_axil_wen ? _GEN_48 : ctrlregs_4; // @[CGRA.scala 18:27 182:30]
-  wire [31:0] _GEN_55 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_50; // @[CGRA.scala 183:{35,35}]
-  wire [31:0] _GEN_56 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_51; // @[CGRA.scala 183:{35,35}]
-  wire [31:0] _GEN_57 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_52; // @[CGRA.scala 183:{35,35}]
-  wire [31:0] _GEN_58 = 3'h3 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_53; // @[CGRA.scala 183:{35,35}]
-  wire [31:0] _GEN_59 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_54; // @[CGRA.scala 183:{35,35}]
-  wire [31:0] _GEN_60 = cgrafinish ? {{31'd0}, cgrafinish} : _GEN_51; // @[CGRA.scala 184:46 185:21]
-  wire [31:0] _GEN_61 = ctrlregs_axil_wen ? _GEN_55 : _GEN_50; // @[CGRA.scala 182:30]
-  wire [31:0] _GEN_62 = ctrlregs_axil_wen ? _GEN_56 : _GEN_60; // @[CGRA.scala 182:30]
-  wire [31:0] _GEN_63 = ctrlregs_axil_wen ? _GEN_57 : _GEN_52; // @[CGRA.scala 182:30]
-  wire [31:0] _GEN_64 = ctrlregs_axil_wen ? _GEN_58 : _GEN_53; // @[CGRA.scala 182:30]
-  wire [31:0] _GEN_65 = ctrlregs_axil_wen ? _GEN_59 : _GEN_54; // @[CGRA.scala 182:30]
-  wire [31:0] _GEN_66 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_61; // @[CGRA.scala 189:{35,35}]
-  wire [31:0] _GEN_67 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_62; // @[CGRA.scala 189:{35,35}]
-  wire [31:0] _GEN_68 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_63; // @[CGRA.scala 189:{35,35}]
-  wire [31:0] _GEN_69 = 3'h3 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_64; // @[CGRA.scala 189:{35,35}]
-  wire [31:0] _GEN_70 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_65; // @[CGRA.scala 189:{35,35}]
-  wire [31:0] _GEN_71 = ctrlregs_axil_wen ? _GEN_66 : _GEN_61; // @[CGRA.scala 188:30]
-  wire [31:0] _GEN_72 = ctrlregs_axil_wen ? _GEN_67 : _GEN_62; // @[CGRA.scala 188:30]
-  wire [31:0] _GEN_73 = ctrlregs_axil_wen ? _GEN_68 : _GEN_63; // @[CGRA.scala 188:30]
-  wire [31:0] _GEN_74 = ctrlregs_axil_wen ? _GEN_69 : _GEN_64; // @[CGRA.scala 188:30]
-  wire [31:0] _GEN_75 = ctrlregs_axil_wen ? _GEN_70 : _GEN_65; // @[CGRA.scala 188:30]
-  wire [31:0] _GEN_76 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_71; // @[CGRA.scala 189:{35,35}]
-  wire [31:0] _GEN_77 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_72; // @[CGRA.scala 189:{35,35}]
-  wire [31:0] _GEN_78 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_73; // @[CGRA.scala 189:{35,35}]
-  wire [31:0] _GEN_79 = 3'h3 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_74; // @[CGRA.scala 189:{35,35}]
-  wire [31:0] _GEN_80 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_75; // @[CGRA.scala 189:{35,35}]
-  wire [31:0] _GEN_81 = ctrlregs_axil_wen ? _GEN_76 : _GEN_71; // @[CGRA.scala 188:30]
-  wire [31:0] _GEN_82 = ctrlregs_axil_wen ? _GEN_77 : _GEN_72; // @[CGRA.scala 188:30]
-  wire [31:0] _GEN_83 = ctrlregs_axil_wen ? _GEN_78 : _GEN_73; // @[CGRA.scala 188:30]
-  wire [31:0] _GEN_84 = ctrlregs_axil_wen ? _GEN_79 : _GEN_74; // @[CGRA.scala 188:30]
-  wire [31:0] _GEN_85 = ctrlregs_axil_wen ? _GEN_80 : _GEN_75; // @[CGRA.scala 188:30]
-  PE PE ( // @[CGRA.scala 14:53]
+  wire [31:0] _currentAddressw_T_1 = io_axilite_s_awaddr_bits - 32'h0; // @[CGRA.scala 109:52]
+  wire  _T_210 = io_axilite_s_wdata_valid & io_axilite_s_wdata_ready; // @[CGRA.scala 114:36]
+  wire [31:0] _ctrlregs_axil_wdata_T_1 = ~mask; // @[CGRA.scala 116:61]
+  wire [31:0] _GEN_3 = 3'h1 == currentAddressw[2:0] ? ctrlregs_1 : ctrlregs_0; // @[CGRA.scala 116:{58,58}]
+  wire [31:0] _GEN_4 = 3'h2 == currentAddressw[2:0] ? ctrlregs_2 : _GEN_3; // @[CGRA.scala 116:{58,58}]
+  wire [31:0] _GEN_5 = 3'h3 == currentAddressw[2:0] ? ctrlregs_3 : _GEN_4; // @[CGRA.scala 116:{58,58}]
+  wire [31:0] _GEN_6 = 3'h4 == currentAddressw[2:0] ? ctrlregs_4 : _GEN_5; // @[CGRA.scala 116:{58,58}]
+  wire [31:0] _GEN_7 = 3'h5 == currentAddressw[2:0] ? ctrlregs_5 : _GEN_6; // @[CGRA.scala 116:{58,58}]
+  wire [31:0] _ctrlregs_axil_wdata_T_2 = _GEN_7 & _ctrlregs_axil_wdata_T_1; // @[CGRA.scala 116:58]
+  wire [31:0] _ctrlregs_axil_wdata_T_3 = io_axilite_s_wdata_bits & mask; // @[CGRA.scala 116:95]
+  wire [31:0] _ctrlregs_axil_wdata_T_4 = _ctrlregs_axil_wdata_T_2 | _ctrlregs_axil_wdata_T_3; // @[CGRA.scala 116:69]
+  wire [31:0] _GEN_9 = io_axilite_s_wdata_valid & io_axilite_s_wdata_ready ? _ctrlregs_axil_wdata_T_4 : 32'h0; // @[CGRA.scala 114:65 116:29 97:23]
+  wire [1:0] _GEN_13 = io_axilite_s_bresp_ready ? 2'h0 : statew; // @[CGRA.scala 121:38 124:16 89:23]
+  wire [31:0] _GEN_18 = 2'h1 == statew ? _GEN_9 : 32'h0; // @[CGRA.scala 106:18 97:23]
+  wire  _GEN_20 = 2'h1 == statew ? 1'h0 : 2'h2 == statew & io_axilite_s_bresp_ready; // @[CGRA.scala 106:18 99:28]
+  wire  ctrlregs_axil_wen = 2'h0 == statew ? 1'h0 : 2'h1 == statew & _T_210; // @[CGRA.scala 106:18 96:20]
+  wire [31:0] ctrlregs_axil_wdata = 2'h0 == statew ? 32'h0 : _GEN_18; // @[CGRA.scala 106:18 97:23]
+  wire  _io_axilite_s_rdata_valid_T = stater == 2'h1; // @[CGRA.scala 130:37]
+  wire [31:0] _currentAddressr_T_1 = io_axilite_s_araddr_bits - 32'h0; // @[CGRA.scala 134:52]
+  wire [31:0] _GEN_35 = 3'h1 == currentAddressr[2:0] ? ctrlregs_1 : ctrlregs_0; // @[CGRA.scala 144:{33,33}]
+  wire [31:0] _GEN_36 = 3'h2 == currentAddressr[2:0] ? ctrlregs_2 : _GEN_35; // @[CGRA.scala 144:{33,33}]
+  wire [31:0] _GEN_37 = 3'h3 == currentAddressr[2:0] ? ctrlregs_3 : _GEN_36; // @[CGRA.scala 144:{33,33}]
+  wire [31:0] _GEN_38 = 3'h4 == currentAddressr[2:0] ? ctrlregs_4 : _GEN_37; // @[CGRA.scala 144:{33,33}]
+  wire [31:0] _GEN_39 = 3'h5 == currentAddressr[2:0] ? ctrlregs_5 : _GEN_38; // @[CGRA.scala 144:{33,33}]
+  wire  _config_finish_T = configwaddr == 32'h6c; // @[CGRA.scala 163:33]
+  wire  config_finish = configwaddr == 32'h6c & _T_16; // @[CGRA.scala 163:51]
+  wire [31:0] statenext = _T_219 & config_finish ? 32'h0 : ctrlregs_0; // @[CGRA.scala 153:13 155:81 156:15]
+  wire [31:0] _configwaddrnext_T_2 = configwaddr + 32'h1; // @[CGRA.scala 161:64]
+  wire [31:0] _configPEnext_T_2 = configPEcnt + 32'h1; // @[CGRA.scala 162:75]
+  wire [31:0] configPEnext = configPEcnt < 32'h8 ? _configPEnext_T_2 : 32'h0; // @[CGRA.scala 162:22]
+  wire  _io_axistream_m_valid_T_1 = ctrlregs_4 < ctrlregs_5; // @[CGRA.scala 176:115]
+  wire  _GEN_47 = 4'h1 == ctrlregs_2[3:0] ? Datamem_1_io_memoptvalid : Datamem_io_memoptvalid; // @[CGRA.scala 176:{155,155}]
+  wire  _GEN_48 = 4'h2 == ctrlregs_2[3:0] ? Datamem_2_io_memoptvalid : _GEN_47; // @[CGRA.scala 176:{155,155}]
+  wire  _GEN_49 = 4'h3 == ctrlregs_2[3:0] ? Datamem_3_io_memoptvalid : _GEN_48; // @[CGRA.scala 176:{155,155}]
+  wire  _GEN_50 = 4'h4 == ctrlregs_2[3:0] ? Datamem_4_io_memoptvalid : _GEN_49; // @[CGRA.scala 176:{155,155}]
+  wire  _GEN_51 = 4'h5 == ctrlregs_2[3:0] ? Datamem_5_io_memoptvalid : _GEN_50; // @[CGRA.scala 176:{155,155}]
+  wire  _GEN_52 = 4'h6 == ctrlregs_2[3:0] ? Datamem_6_io_memoptvalid : _GEN_51; // @[CGRA.scala 176:{155,155}]
+  wire  _GEN_53 = 4'h7 == ctrlregs_2[3:0] ? Datamem_7_io_memoptvalid : _GEN_52; // @[CGRA.scala 176:{155,155}]
+  wire  _GEN_54 = 4'h8 == ctrlregs_2[3:0] ? Datamem_8_io_memoptvalid : _GEN_53; // @[CGRA.scala 176:{155,155}]
+  wire [31:0] _io_axistream_m_data_WIRE_0 = Datamem_io_rdata; // @[CGRA.scala 177:{33,33}]
+  wire [31:0] _io_axistream_m_data_WIRE_1 = Datamem_1_io_rdata; // @[CGRA.scala 177:{33,33}]
+  wire [31:0] _GEN_56 = 4'h1 == ctrlregs_2[3:0] ? _io_axistream_m_data_WIRE_1 : _io_axistream_m_data_WIRE_0; // @[CGRA.scala 177:{23,23}]
+  wire [31:0] _io_axistream_m_data_WIRE_2 = Datamem_2_io_rdata; // @[CGRA.scala 177:{33,33}]
+  wire [31:0] _GEN_57 = 4'h2 == ctrlregs_2[3:0] ? _io_axistream_m_data_WIRE_2 : _GEN_56; // @[CGRA.scala 177:{23,23}]
+  wire [31:0] _io_axistream_m_data_WIRE_3 = Datamem_3_io_rdata; // @[CGRA.scala 177:{33,33}]
+  wire [31:0] _GEN_58 = 4'h3 == ctrlregs_2[3:0] ? _io_axistream_m_data_WIRE_3 : _GEN_57; // @[CGRA.scala 177:{23,23}]
+  wire [31:0] _io_axistream_m_data_WIRE_4 = Datamem_4_io_rdata; // @[CGRA.scala 177:{33,33}]
+  wire [31:0] _GEN_59 = 4'h4 == ctrlregs_2[3:0] ? _io_axistream_m_data_WIRE_4 : _GEN_58; // @[CGRA.scala 177:{23,23}]
+  wire [31:0] _io_axistream_m_data_WIRE_5 = Datamem_5_io_rdata; // @[CGRA.scala 177:{33,33}]
+  wire [31:0] _GEN_60 = 4'h5 == ctrlregs_2[3:0] ? _io_axistream_m_data_WIRE_5 : _GEN_59; // @[CGRA.scala 177:{23,23}]
+  wire [31:0] _io_axistream_m_data_WIRE_6 = Datamem_6_io_rdata; // @[CGRA.scala 177:{33,33}]
+  wire [31:0] _GEN_61 = 4'h6 == ctrlregs_2[3:0] ? _io_axistream_m_data_WIRE_6 : _GEN_60; // @[CGRA.scala 177:{23,23}]
+  wire [31:0] _io_axistream_m_data_WIRE_7 = Datamem_7_io_rdata; // @[CGRA.scala 177:{33,33}]
+  wire [31:0] _GEN_62 = 4'h7 == ctrlregs_2[3:0] ? _io_axistream_m_data_WIRE_7 : _GEN_61; // @[CGRA.scala 177:{23,23}]
+  wire [31:0] _io_axistream_m_data_WIRE_8 = Datamem_8_io_rdata; // @[CGRA.scala 177:{33,33}]
+  wire [31:0] _io_axistream_m_last_T_2 = ctrlregs_5 - 32'h1; // @[CGRA.scala 178:155]
+  wire [31:0] _T_224 = ctrlregs_4 + 32'h1; // @[CGRA.scala 186:85]
+  wire  _T_233 = _T_20 | _T_29 & io_axistream_m_valid & io_axistream_m_ready & _io_axistream_m_valid_T_1; // @[CGRA.scala 187:144]
+  wire [31:0] _GEN_64 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_0; // @[CGRA.scala 19:27 192:{35,35}]
+  wire [31:0] _GEN_65 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_1; // @[CGRA.scala 19:27 192:{35,35}]
+  wire [31:0] _GEN_66 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_2; // @[CGRA.scala 19:27 192:{35,35}]
+  wire [31:0] _GEN_67 = 3'h3 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_3; // @[CGRA.scala 19:27 192:{35,35}]
+  wire [31:0] _GEN_68 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_4; // @[CGRA.scala 19:27 192:{35,35}]
+  wire [31:0] _GEN_69 = 3'h5 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_5; // @[CGRA.scala 19:27 192:{35,35}]
+  wire [31:0] _GEN_70 = config_finish ? statenext : ctrlregs_0; // @[CGRA.scala 193:46 194:21 19:27]
+  wire [31:0] _GEN_71 = ctrlregs_axil_wen ? _GEN_64 : _GEN_70; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_72 = ctrlregs_axil_wen ? _GEN_65 : ctrlregs_1; // @[CGRA.scala 19:27 191:30]
+  wire [31:0] _GEN_73 = ctrlregs_axil_wen ? _GEN_66 : ctrlregs_2; // @[CGRA.scala 19:27 191:30]
+  wire [31:0] _GEN_74 = ctrlregs_axil_wen ? _GEN_67 : ctrlregs_3; // @[CGRA.scala 19:27 191:30]
+  wire [31:0] _GEN_75 = ctrlregs_axil_wen ? _GEN_68 : ctrlregs_4; // @[CGRA.scala 19:27 191:30]
+  wire [31:0] _GEN_76 = ctrlregs_axil_wen ? _GEN_69 : ctrlregs_5; // @[CGRA.scala 19:27 191:30]
+  wire [31:0] _GEN_77 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_71; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_78 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_72; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_79 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_73; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_80 = 3'h3 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_74; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_81 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_75; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_82 = 3'h5 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_76; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_83 = cgrafinish ? {{31'd0}, cgrafinish} : _GEN_72; // @[CGRA.scala 193:46 194:21]
+  wire [31:0] _GEN_84 = ctrlregs_axil_wen ? _GEN_77 : _GEN_71; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_85 = ctrlregs_axil_wen ? _GEN_78 : _GEN_83; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_86 = ctrlregs_axil_wen ? _GEN_79 : _GEN_73; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_87 = ctrlregs_axil_wen ? _GEN_80 : _GEN_74; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_88 = ctrlregs_axil_wen ? _GEN_81 : _GEN_75; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_89 = ctrlregs_axil_wen ? _GEN_82 : _GEN_76; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_90 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_84; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_91 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_85; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_92 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_86; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_93 = 3'h3 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_87; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_94 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_88; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_95 = 3'h5 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_89; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_96 = ctrlregs_axil_wen ? _GEN_90 : _GEN_84; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_97 = ctrlregs_axil_wen ? _GEN_91 : _GEN_85; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_98 = ctrlregs_axil_wen ? _GEN_92 : _GEN_86; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_99 = ctrlregs_axil_wen ? _GEN_93 : _GEN_87; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_100 = ctrlregs_axil_wen ? _GEN_94 : _GEN_88; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_101 = ctrlregs_axil_wen ? _GEN_95 : _GEN_89; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_102 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_96; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_103 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_97; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_104 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_98; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_105 = 3'h3 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_99; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_106 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_100; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_107 = 3'h5 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_101; // @[CGRA.scala 198:{35,35}]
+  wire [31:0] _GEN_108 = ctrlregs_axil_wen ? _GEN_102 : _GEN_96; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_109 = ctrlregs_axil_wen ? _GEN_103 : _GEN_97; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_110 = ctrlregs_axil_wen ? _GEN_104 : _GEN_98; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_111 = ctrlregs_axil_wen ? _GEN_105 : _GEN_99; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_112 = ctrlregs_axil_wen ? _GEN_106 : _GEN_100; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_113 = ctrlregs_axil_wen ? _GEN_107 : _GEN_101; // @[CGRA.scala 197:30]
+  wire [31:0] _GEN_114 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_108; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_115 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_109; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_116 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_110; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_117 = 3'h3 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_111; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_118 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_112; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_119 = 3'h5 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_113; // @[CGRA.scala 192:{35,35}]
+  wire [31:0] _GEN_120 = _T_233 ? _T_224 : _GEN_112; // @[CGRA.scala 193:46 194:21]
+  wire [31:0] _GEN_121 = ctrlregs_axil_wen ? _GEN_114 : _GEN_108; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_122 = ctrlregs_axil_wen ? _GEN_115 : _GEN_109; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_123 = ctrlregs_axil_wen ? _GEN_116 : _GEN_110; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_124 = ctrlregs_axil_wen ? _GEN_117 : _GEN_111; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_125 = ctrlregs_axil_wen ? _GEN_118 : _GEN_120; // @[CGRA.scala 191:30]
+  wire [31:0] _GEN_126 = ctrlregs_axil_wen ? _GEN_119 : _GEN_113; // @[CGRA.scala 191:30]
+  PE PE ( // @[CGRA.scala 15:53]
     .clock(PE_clock),
     .reset(PE_reset),
     .io_inLinks_0(PE_io_inLinks_0),
@@ -7286,7 +7346,7 @@ module CGRA(
     .io_datamemio_rdata(PE_io_datamemio_rdata),
     .io_datamemio_memoptvalid(PE_io_datamemio_memoptvalid)
   );
-  PE_1 PE_1 ( // @[CGRA.scala 14:53]
+  PE_1 PE_1 ( // @[CGRA.scala 15:53]
     .clock(PE_1_clock),
     .reset(PE_1_reset),
     .io_inLinks_0(PE_1_io_inLinks_0),
@@ -7311,7 +7371,7 @@ module CGRA(
     .io_datamemio_rdata(PE_1_io_datamemio_rdata),
     .io_datamemio_memoptvalid(PE_1_io_datamemio_memoptvalid)
   );
-  PE_2 PE_2 ( // @[CGRA.scala 14:53]
+  PE_2 PE_2 ( // @[CGRA.scala 15:53]
     .clock(PE_2_clock),
     .reset(PE_2_reset),
     .io_inLinks_0(PE_2_io_inLinks_0),
@@ -7333,7 +7393,7 @@ module CGRA(
     .io_datamemio_rdata(PE_2_io_datamemio_rdata),
     .io_datamemio_memoptvalid(PE_2_io_datamemio_memoptvalid)
   );
-  PE_3 PE_3 ( // @[CGRA.scala 14:53]
+  PE_3 PE_3 ( // @[CGRA.scala 15:53]
     .clock(PE_3_clock),
     .reset(PE_3_reset),
     .io_inLinks_0(PE_3_io_inLinks_0),
@@ -7358,7 +7418,7 @@ module CGRA(
     .io_datamemio_rdata(PE_3_io_datamemio_rdata),
     .io_datamemio_memoptvalid(PE_3_io_datamemio_memoptvalid)
   );
-  PE_4 PE_4 ( // @[CGRA.scala 14:53]
+  PE_4 PE_4 ( // @[CGRA.scala 15:53]
     .clock(PE_4_clock),
     .reset(PE_4_reset),
     .io_inLinks_0(PE_4_io_inLinks_0),
@@ -7386,7 +7446,7 @@ module CGRA(
     .io_datamemio_rdata(PE_4_io_datamemio_rdata),
     .io_datamemio_memoptvalid(PE_4_io_datamemio_memoptvalid)
   );
-  PE_5 PE_5 ( // @[CGRA.scala 14:53]
+  PE_5 PE_5 ( // @[CGRA.scala 15:53]
     .clock(PE_5_clock),
     .reset(PE_5_reset),
     .io_inLinks_0(PE_5_io_inLinks_0),
@@ -7411,7 +7471,7 @@ module CGRA(
     .io_datamemio_rdata(PE_5_io_datamemio_rdata),
     .io_datamemio_memoptvalid(PE_5_io_datamemio_memoptvalid)
   );
-  PE_6 PE_6 ( // @[CGRA.scala 14:53]
+  PE_6 PE_6 ( // @[CGRA.scala 15:53]
     .clock(PE_6_clock),
     .reset(PE_6_reset),
     .io_inLinks_1(PE_6_io_inLinks_1),
@@ -7433,7 +7493,7 @@ module CGRA(
     .io_datamemio_rdata(PE_6_io_datamemio_rdata),
     .io_datamemio_memoptvalid(PE_6_io_datamemio_memoptvalid)
   );
-  PE_7 PE_7 ( // @[CGRA.scala 14:53]
+  PE_7 PE_7 ( // @[CGRA.scala 15:53]
     .clock(PE_7_clock),
     .reset(PE_7_reset),
     .io_inLinks_1(PE_7_io_inLinks_1),
@@ -7458,7 +7518,7 @@ module CGRA(
     .io_datamemio_rdata(PE_7_io_datamemio_rdata),
     .io_datamemio_memoptvalid(PE_7_io_datamemio_memoptvalid)
   );
-  PE_8 PE_8 ( // @[CGRA.scala 14:53]
+  PE_8 PE_8 ( // @[CGRA.scala 15:53]
     .clock(PE_8_clock),
     .reset(PE_8_reset),
     .io_inLinks_1(PE_8_io_inLinks_1),
@@ -7480,175 +7540,175 @@ module CGRA(
     .io_datamemio_rdata(PE_8_io_datamemio_rdata),
     .io_datamemio_memoptvalid(PE_8_io_datamemio_memoptvalid)
   );
-  Link Link ( // @[CGRA.scala 15:89]
+  Link Link ( // @[CGRA.scala 16:89]
     .clock(Link_clock),
     .reset(Link_reset),
     .io_in_valid(Link_io_in_valid),
     .io_in_bits(Link_io_in_bits),
     .io_out(Link_io_out)
   );
-  Link Link_1 ( // @[CGRA.scala 15:89]
+  Link Link_1 ( // @[CGRA.scala 16:89]
     .clock(Link_1_clock),
     .reset(Link_1_reset),
     .io_in_valid(Link_1_io_in_valid),
     .io_in_bits(Link_1_io_in_bits),
     .io_out(Link_1_io_out)
   );
-  Link Link_2 ( // @[CGRA.scala 15:89]
+  Link Link_2 ( // @[CGRA.scala 16:89]
     .clock(Link_2_clock),
     .reset(Link_2_reset),
     .io_in_valid(Link_2_io_in_valid),
     .io_in_bits(Link_2_io_in_bits),
     .io_out(Link_2_io_out)
   );
-  Link Link_3 ( // @[CGRA.scala 15:89]
+  Link Link_3 ( // @[CGRA.scala 16:89]
     .clock(Link_3_clock),
     .reset(Link_3_reset),
     .io_in_valid(Link_3_io_in_valid),
     .io_in_bits(Link_3_io_in_bits),
     .io_out(Link_3_io_out)
   );
-  Link Link_4 ( // @[CGRA.scala 15:89]
+  Link Link_4 ( // @[CGRA.scala 16:89]
     .clock(Link_4_clock),
     .reset(Link_4_reset),
     .io_in_valid(Link_4_io_in_valid),
     .io_in_bits(Link_4_io_in_bits),
     .io_out(Link_4_io_out)
   );
-  Link Link_5 ( // @[CGRA.scala 15:89]
+  Link Link_5 ( // @[CGRA.scala 16:89]
     .clock(Link_5_clock),
     .reset(Link_5_reset),
     .io_in_valid(Link_5_io_in_valid),
     .io_in_bits(Link_5_io_in_bits),
     .io_out(Link_5_io_out)
   );
-  Link Link_6 ( // @[CGRA.scala 15:89]
+  Link Link_6 ( // @[CGRA.scala 16:89]
     .clock(Link_6_clock),
     .reset(Link_6_reset),
     .io_in_valid(Link_6_io_in_valid),
     .io_in_bits(Link_6_io_in_bits),
     .io_out(Link_6_io_out)
   );
-  Link Link_7 ( // @[CGRA.scala 15:89]
+  Link Link_7 ( // @[CGRA.scala 16:89]
     .clock(Link_7_clock),
     .reset(Link_7_reset),
     .io_in_valid(Link_7_io_in_valid),
     .io_in_bits(Link_7_io_in_bits),
     .io_out(Link_7_io_out)
   );
-  Link Link_8 ( // @[CGRA.scala 15:89]
+  Link Link_8 ( // @[CGRA.scala 16:89]
     .clock(Link_8_clock),
     .reset(Link_8_reset),
     .io_in_valid(Link_8_io_in_valid),
     .io_in_bits(Link_8_io_in_bits),
     .io_out(Link_8_io_out)
   );
-  Link Link_9 ( // @[CGRA.scala 15:89]
+  Link Link_9 ( // @[CGRA.scala 16:89]
     .clock(Link_9_clock),
     .reset(Link_9_reset),
     .io_in_valid(Link_9_io_in_valid),
     .io_in_bits(Link_9_io_in_bits),
     .io_out(Link_9_io_out)
   );
-  Link Link_10 ( // @[CGRA.scala 15:89]
+  Link Link_10 ( // @[CGRA.scala 16:89]
     .clock(Link_10_clock),
     .reset(Link_10_reset),
     .io_in_valid(Link_10_io_in_valid),
     .io_in_bits(Link_10_io_in_bits),
     .io_out(Link_10_io_out)
   );
-  Link Link_11 ( // @[CGRA.scala 15:89]
+  Link Link_11 ( // @[CGRA.scala 16:89]
     .clock(Link_11_clock),
     .reset(Link_11_reset),
     .io_in_valid(Link_11_io_in_valid),
     .io_in_bits(Link_11_io_in_bits),
     .io_out(Link_11_io_out)
   );
-  Link Link_12 ( // @[CGRA.scala 15:89]
+  Link Link_12 ( // @[CGRA.scala 16:89]
     .clock(Link_12_clock),
     .reset(Link_12_reset),
     .io_in_valid(Link_12_io_in_valid),
     .io_in_bits(Link_12_io_in_bits),
     .io_out(Link_12_io_out)
   );
-  Link Link_13 ( // @[CGRA.scala 15:89]
+  Link Link_13 ( // @[CGRA.scala 16:89]
     .clock(Link_13_clock),
     .reset(Link_13_reset),
     .io_in_valid(Link_13_io_in_valid),
     .io_in_bits(Link_13_io_in_bits),
     .io_out(Link_13_io_out)
   );
-  Link Link_14 ( // @[CGRA.scala 15:89]
+  Link Link_14 ( // @[CGRA.scala 16:89]
     .clock(Link_14_clock),
     .reset(Link_14_reset),
     .io_in_valid(Link_14_io_in_valid),
     .io_in_bits(Link_14_io_in_bits),
     .io_out(Link_14_io_out)
   );
-  Link Link_15 ( // @[CGRA.scala 15:89]
+  Link Link_15 ( // @[CGRA.scala 16:89]
     .clock(Link_15_clock),
     .reset(Link_15_reset),
     .io_in_valid(Link_15_io_in_valid),
     .io_in_bits(Link_15_io_in_bits),
     .io_out(Link_15_io_out)
   );
-  Link Link_16 ( // @[CGRA.scala 15:89]
+  Link Link_16 ( // @[CGRA.scala 16:89]
     .clock(Link_16_clock),
     .reset(Link_16_reset),
     .io_in_valid(Link_16_io_in_valid),
     .io_in_bits(Link_16_io_in_bits),
     .io_out(Link_16_io_out)
   );
-  Link Link_17 ( // @[CGRA.scala 15:89]
+  Link Link_17 ( // @[CGRA.scala 16:89]
     .clock(Link_17_clock),
     .reset(Link_17_reset),
     .io_in_valid(Link_17_io_in_valid),
     .io_in_bits(Link_17_io_in_bits),
     .io_out(Link_17_io_out)
   );
-  Link Link_18 ( // @[CGRA.scala 15:89]
+  Link Link_18 ( // @[CGRA.scala 16:89]
     .clock(Link_18_clock),
     .reset(Link_18_reset),
     .io_in_valid(Link_18_io_in_valid),
     .io_in_bits(Link_18_io_in_bits),
     .io_out(Link_18_io_out)
   );
-  Link Link_19 ( // @[CGRA.scala 15:89]
+  Link Link_19 ( // @[CGRA.scala 16:89]
     .clock(Link_19_clock),
     .reset(Link_19_reset),
     .io_in_valid(Link_19_io_in_valid),
     .io_in_bits(Link_19_io_in_bits),
     .io_out(Link_19_io_out)
   );
-  Link Link_20 ( // @[CGRA.scala 15:89]
+  Link Link_20 ( // @[CGRA.scala 16:89]
     .clock(Link_20_clock),
     .reset(Link_20_reset),
     .io_in_valid(Link_20_io_in_valid),
     .io_in_bits(Link_20_io_in_bits),
     .io_out(Link_20_io_out)
   );
-  Link Link_21 ( // @[CGRA.scala 15:89]
+  Link Link_21 ( // @[CGRA.scala 16:89]
     .clock(Link_21_clock),
     .reset(Link_21_reset),
     .io_in_valid(Link_21_io_in_valid),
     .io_in_bits(Link_21_io_in_bits),
     .io_out(Link_21_io_out)
   );
-  Link Link_22 ( // @[CGRA.scala 15:89]
+  Link Link_22 ( // @[CGRA.scala 16:89]
     .clock(Link_22_clock),
     .reset(Link_22_reset),
     .io_in_valid(Link_22_io_in_valid),
     .io_in_bits(Link_22_io_in_bits),
     .io_out(Link_22_io_out)
   );
-  Link Link_23 ( // @[CGRA.scala 15:89]
+  Link Link_23 ( // @[CGRA.scala 16:89]
     .clock(Link_23_clock),
     .reset(Link_23_reset),
     .io_in_valid(Link_23_io_in_valid),
     .io_in_bits(Link_23_io_in_bits),
     .io_out(Link_23_io_out)
   );
-  Datamem Datamem ( // @[CGRA.scala 16:54]
+  Datamem Datamem ( // @[CGRA.scala 17:54]
     .clock(Datamem_clock),
     .io_wen(Datamem_io_wen),
     .io_waddr(Datamem_io_waddr),
@@ -7658,7 +7718,7 @@ module CGRA(
     .io_rdata(Datamem_io_rdata),
     .io_memoptvalid(Datamem_io_memoptvalid)
   );
-  Datamem Datamem_1 ( // @[CGRA.scala 16:54]
+  Datamem Datamem_1 ( // @[CGRA.scala 17:54]
     .clock(Datamem_1_clock),
     .io_wen(Datamem_1_io_wen),
     .io_waddr(Datamem_1_io_waddr),
@@ -7668,7 +7728,7 @@ module CGRA(
     .io_rdata(Datamem_1_io_rdata),
     .io_memoptvalid(Datamem_1_io_memoptvalid)
   );
-  Datamem Datamem_2 ( // @[CGRA.scala 16:54]
+  Datamem Datamem_2 ( // @[CGRA.scala 17:54]
     .clock(Datamem_2_clock),
     .io_wen(Datamem_2_io_wen),
     .io_waddr(Datamem_2_io_waddr),
@@ -7678,7 +7738,7 @@ module CGRA(
     .io_rdata(Datamem_2_io_rdata),
     .io_memoptvalid(Datamem_2_io_memoptvalid)
   );
-  Datamem Datamem_3 ( // @[CGRA.scala 16:54]
+  Datamem Datamem_3 ( // @[CGRA.scala 17:54]
     .clock(Datamem_3_clock),
     .io_wen(Datamem_3_io_wen),
     .io_waddr(Datamem_3_io_waddr),
@@ -7688,7 +7748,7 @@ module CGRA(
     .io_rdata(Datamem_3_io_rdata),
     .io_memoptvalid(Datamem_3_io_memoptvalid)
   );
-  Datamem Datamem_4 ( // @[CGRA.scala 16:54]
+  Datamem Datamem_4 ( // @[CGRA.scala 17:54]
     .clock(Datamem_4_clock),
     .io_wen(Datamem_4_io_wen),
     .io_waddr(Datamem_4_io_waddr),
@@ -7698,7 +7758,7 @@ module CGRA(
     .io_rdata(Datamem_4_io_rdata),
     .io_memoptvalid(Datamem_4_io_memoptvalid)
   );
-  Datamem Datamem_5 ( // @[CGRA.scala 16:54]
+  Datamem Datamem_5 ( // @[CGRA.scala 17:54]
     .clock(Datamem_5_clock),
     .io_wen(Datamem_5_io_wen),
     .io_waddr(Datamem_5_io_waddr),
@@ -7708,7 +7768,7 @@ module CGRA(
     .io_rdata(Datamem_5_io_rdata),
     .io_memoptvalid(Datamem_5_io_memoptvalid)
   );
-  Datamem Datamem_6 ( // @[CGRA.scala 16:54]
+  Datamem Datamem_6 ( // @[CGRA.scala 17:54]
     .clock(Datamem_6_clock),
     .io_wen(Datamem_6_io_wen),
     .io_waddr(Datamem_6_io_waddr),
@@ -7718,7 +7778,7 @@ module CGRA(
     .io_rdata(Datamem_6_io_rdata),
     .io_memoptvalid(Datamem_6_io_memoptvalid)
   );
-  Datamem Datamem_7 ( // @[CGRA.scala 16:54]
+  Datamem Datamem_7 ( // @[CGRA.scala 17:54]
     .clock(Datamem_7_clock),
     .io_wen(Datamem_7_io_wen),
     .io_waddr(Datamem_7_io_waddr),
@@ -7728,7 +7788,7 @@ module CGRA(
     .io_rdata(Datamem_7_io_rdata),
     .io_memoptvalid(Datamem_7_io_memoptvalid)
   );
-  Datamem Datamem_8 ( // @[CGRA.scala 16:54]
+  Datamem Datamem_8 ( // @[CGRA.scala 17:54]
     .clock(Datamem_8_clock),
     .io_wen(Datamem_8_io_wen),
     .io_waddr(Datamem_8_io_waddr),
@@ -7738,408 +7798,424 @@ module CGRA(
     .io_rdata(Datamem_8_io_rdata),
     .io_memoptvalid(Datamem_8_io_memoptvalid)
   );
-  assign io_finish = ctrlregs_1[0]; // @[CGRA.scala 80:14]
-  assign io_axilite_s_araddr_ready = stater == 2'h0; // @[CGRA.scala 123:39]
-  assign io_axilite_s_rdata_valid = stater == 2'h1; // @[CGRA.scala 124:37]
+  assign io_finish = ctrlregs_1[0]; // @[CGRA.scala 86:14]
+  assign io_axilite_s_araddr_ready = stater == 2'h0; // @[CGRA.scala 129:39]
+  assign io_axilite_s_rdata_valid = stater == 2'h1; // @[CGRA.scala 130:37]
   assign io_axilite_s_rdata_bits = _io_axilite_s_rdata_valid_T & io_axilite_s_rdata_valid & io_axilite_s_rdata_ready ?
-    _GEN_37 : 32'h0; // @[CGRA.scala 138:33]
-  assign io_axilite_s_rresp = 2'h0; // @[CGRA.scala 140:22]
-  assign io_axilite_s_awaddr_ready = statew == 2'h0; // @[CGRA.scala 96:39]
-  assign io_axilite_s_wdata_ready = statew == 2'h1; // @[CGRA.scala 97:38]
-  assign io_axilite_s_bresp_valid = 2'h0 == statew ? 1'h0 : _GEN_19; // @[CGRA.scala 100:18 93:28]
+    _GEN_39 : 32'h0; // @[CGRA.scala 144:33]
+  assign io_axilite_s_rresp = 2'h0; // @[CGRA.scala 146:22]
+  assign io_axilite_s_awaddr_ready = statew == 2'h0; // @[CGRA.scala 102:39]
+  assign io_axilite_s_wdata_ready = statew == 2'h1; // @[CGRA.scala 103:38]
+  assign io_axilite_s_bresp_valid = 2'h0 == statew ? 1'h0 : _GEN_20; // @[CGRA.scala 106:18 99:28]
   assign io_axilite_s_bresp_bits = 2'h0;
-  assign io_axistream_s_ready = 32'h1 == ctrlregs_0 | 32'h2 == ctrlregs_0; // @[CGRA.scala 158:71]
+  assign io_axistream_s_ready = 32'h1 == ctrlregs_0 | 32'h2 == ctrlregs_0; // @[CGRA.scala 164:71]
+  assign io_axistream_m_valid = _T_29 & ctrlregs_4 < ctrlregs_5 & _GEN_54; // @[CGRA.scala 176:155]
+  assign io_axistream_m_data = 4'h8 == ctrlregs_2[3:0] ? _io_axistream_m_data_WIRE_8 : _GEN_62; // @[CGRA.scala 177:{23,23}]
+  assign io_axistream_m_last = _T_29 & ctrlregs_4 == _io_axistream_m_last_T_2; // @[CGRA.scala 178:76]
   assign PE_clock = clock;
   assign PE_reset = reset;
-  assign PE_io_inLinks_0 = Link_8_io_out; // @[CGRA.scala 62:47]
-  assign PE_io_inLinks_3 = Link_4_io_out; // @[CGRA.scala 72:45]
-  assign PE_io_run = io_run; // @[CGRA.scala 40:25]
-  assign PE_io_wen = configwen & configPEcnt == 32'h0; // @[CGRA.scala 37:38]
-  assign PE_io_waddr = configwaddr; // @[CGRA.scala 38:26]
-  assign PE_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 159:101 160:17 26:17]
-  assign PE_io_datamemio_rdata = Datamem_io_rdata; // @[CGRA.scala 44:27]
-  assign PE_io_datamemio_memoptvalid = Datamem_io_memoptvalid; // @[CGRA.scala 44:27]
+  assign PE_io_inLinks_0 = Link_8_io_out; // @[CGRA.scala 68:47]
+  assign PE_io_inLinks_3 = Link_4_io_out; // @[CGRA.scala 78:45]
+  assign PE_io_run = io_run; // @[CGRA.scala 43:25]
+  assign PE_io_wen = configwen & configPEcnt == 32'h0; // @[CGRA.scala 40:38]
+  assign PE_io_waddr = configwaddr; // @[CGRA.scala 41:26]
+  assign PE_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 165:101 166:17 27:17]
+  assign PE_io_datamemio_rdata = Datamem_io_rdata; // @[CGRA.scala 47:27]
+  assign PE_io_datamemio_memoptvalid = Datamem_io_memoptvalid; // @[CGRA.scala 47:27]
   assign PE_1_clock = clock;
   assign PE_1_reset = reset;
-  assign PE_1_io_inLinks_0 = Link_11_io_out; // @[CGRA.scala 62:47]
-  assign PE_1_io_inLinks_2 = Link_1_io_out; // @[CGRA.scala 67:45]
-  assign PE_1_io_inLinks_3 = Link_6_io_out; // @[CGRA.scala 72:45]
-  assign PE_1_io_run = io_run; // @[CGRA.scala 40:25]
-  assign PE_1_io_wen = configwen & configPEcnt == 32'h1; // @[CGRA.scala 37:38]
-  assign PE_1_io_waddr = configwaddr; // @[CGRA.scala 38:26]
-  assign PE_1_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 159:101 160:17 26:17]
-  assign PE_1_io_datamemio_rdata = Datamem_1_io_rdata; // @[CGRA.scala 44:27]
-  assign PE_1_io_datamemio_memoptvalid = Datamem_1_io_memoptvalid; // @[CGRA.scala 44:27]
+  assign PE_1_io_inLinks_0 = Link_11_io_out; // @[CGRA.scala 68:47]
+  assign PE_1_io_inLinks_2 = Link_1_io_out; // @[CGRA.scala 73:45]
+  assign PE_1_io_inLinks_3 = Link_6_io_out; // @[CGRA.scala 78:45]
+  assign PE_1_io_run = io_run; // @[CGRA.scala 43:25]
+  assign PE_1_io_wen = configwen & configPEcnt == 32'h1; // @[CGRA.scala 40:38]
+  assign PE_1_io_waddr = configwaddr; // @[CGRA.scala 41:26]
+  assign PE_1_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 165:101 166:17 27:17]
+  assign PE_1_io_datamemio_rdata = Datamem_1_io_rdata; // @[CGRA.scala 47:27]
+  assign PE_1_io_datamemio_memoptvalid = Datamem_1_io_memoptvalid; // @[CGRA.scala 47:27]
   assign PE_2_clock = clock;
   assign PE_2_reset = reset;
-  assign PE_2_io_inLinks_0 = Link_15_io_out; // @[CGRA.scala 62:47]
-  assign PE_2_io_inLinks_2 = Link_3_io_out; // @[CGRA.scala 67:45]
-  assign PE_2_io_run = io_run; // @[CGRA.scala 40:25]
-  assign PE_2_io_wen = configwen & configPEcnt == 32'h2; // @[CGRA.scala 37:38]
-  assign PE_2_io_waddr = configwaddr; // @[CGRA.scala 38:26]
-  assign PE_2_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 159:101 160:17 26:17]
-  assign PE_2_io_datamemio_rdata = Datamem_2_io_rdata; // @[CGRA.scala 44:27]
-  assign PE_2_io_datamemio_memoptvalid = Datamem_2_io_memoptvalid; // @[CGRA.scala 44:27]
+  assign PE_2_io_inLinks_0 = Link_15_io_out; // @[CGRA.scala 68:47]
+  assign PE_2_io_inLinks_2 = Link_3_io_out; // @[CGRA.scala 73:45]
+  assign PE_2_io_run = io_run; // @[CGRA.scala 43:25]
+  assign PE_2_io_wen = configwen & configPEcnt == 32'h2; // @[CGRA.scala 40:38]
+  assign PE_2_io_waddr = configwaddr; // @[CGRA.scala 41:26]
+  assign PE_2_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 165:101 166:17 27:17]
+  assign PE_2_io_datamemio_rdata = Datamem_2_io_rdata; // @[CGRA.scala 47:27]
+  assign PE_2_io_datamemio_memoptvalid = Datamem_2_io_memoptvalid; // @[CGRA.scala 47:27]
   assign PE_3_clock = clock;
   assign PE_3_reset = reset;
-  assign PE_3_io_inLinks_0 = Link_17_io_out; // @[CGRA.scala 62:47]
-  assign PE_3_io_inLinks_1 = Link_io_out; // @[CGRA.scala 57:47]
-  assign PE_3_io_inLinks_3 = Link_13_io_out; // @[CGRA.scala 72:45]
-  assign PE_3_io_run = io_run; // @[CGRA.scala 40:25]
-  assign PE_3_io_wen = configwen & configPEcnt == 32'h3; // @[CGRA.scala 37:38]
-  assign PE_3_io_waddr = configwaddr; // @[CGRA.scala 38:26]
-  assign PE_3_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 159:101 160:17 26:17]
-  assign PE_3_io_datamemio_rdata = Datamem_3_io_rdata; // @[CGRA.scala 44:27]
-  assign PE_3_io_datamemio_memoptvalid = Datamem_3_io_memoptvalid; // @[CGRA.scala 44:27]
+  assign PE_3_io_inLinks_0 = Link_17_io_out; // @[CGRA.scala 68:47]
+  assign PE_3_io_inLinks_1 = Link_io_out; // @[CGRA.scala 63:47]
+  assign PE_3_io_inLinks_3 = Link_13_io_out; // @[CGRA.scala 78:45]
+  assign PE_3_io_run = io_run; // @[CGRA.scala 43:25]
+  assign PE_3_io_wen = configwen & configPEcnt == 32'h3; // @[CGRA.scala 40:38]
+  assign PE_3_io_waddr = configwaddr; // @[CGRA.scala 41:26]
+  assign PE_3_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 165:101 166:17 27:17]
+  assign PE_3_io_datamemio_rdata = Datamem_3_io_rdata; // @[CGRA.scala 47:27]
+  assign PE_3_io_datamemio_memoptvalid = Datamem_3_io_memoptvalid; // @[CGRA.scala 47:27]
   assign PE_4_clock = clock;
   assign PE_4_reset = reset;
-  assign PE_4_io_inLinks_0 = Link_19_io_out; // @[CGRA.scala 62:47]
-  assign PE_4_io_inLinks_1 = Link_2_io_out; // @[CGRA.scala 57:47]
-  assign PE_4_io_inLinks_2 = Link_9_io_out; // @[CGRA.scala 67:45]
-  assign PE_4_io_inLinks_3 = Link_16_io_out; // @[CGRA.scala 72:45]
-  assign PE_4_io_run = io_run; // @[CGRA.scala 40:25]
-  assign PE_4_io_wen = configwen & configPEcnt == 32'h4; // @[CGRA.scala 37:38]
-  assign PE_4_io_waddr = configwaddr; // @[CGRA.scala 38:26]
-  assign PE_4_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 159:101 160:17 26:17]
-  assign PE_4_io_datamemio_rdata = Datamem_4_io_rdata; // @[CGRA.scala 44:27]
-  assign PE_4_io_datamemio_memoptvalid = Datamem_4_io_memoptvalid; // @[CGRA.scala 44:27]
+  assign PE_4_io_inLinks_0 = Link_19_io_out; // @[CGRA.scala 68:47]
+  assign PE_4_io_inLinks_1 = Link_2_io_out; // @[CGRA.scala 63:47]
+  assign PE_4_io_inLinks_2 = Link_9_io_out; // @[CGRA.scala 73:45]
+  assign PE_4_io_inLinks_3 = Link_16_io_out; // @[CGRA.scala 78:45]
+  assign PE_4_io_run = io_run; // @[CGRA.scala 43:25]
+  assign PE_4_io_wen = configwen & configPEcnt == 32'h4; // @[CGRA.scala 40:38]
+  assign PE_4_io_waddr = configwaddr; // @[CGRA.scala 41:26]
+  assign PE_4_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 165:101 166:17 27:17]
+  assign PE_4_io_datamemio_rdata = Datamem_4_io_rdata; // @[CGRA.scala 47:27]
+  assign PE_4_io_datamemio_memoptvalid = Datamem_4_io_memoptvalid; // @[CGRA.scala 47:27]
   assign PE_5_clock = clock;
   assign PE_5_reset = reset;
-  assign PE_5_io_inLinks_0 = Link_22_io_out; // @[CGRA.scala 62:47]
-  assign PE_5_io_inLinks_1 = Link_5_io_out; // @[CGRA.scala 57:47]
-  assign PE_5_io_inLinks_2 = Link_12_io_out; // @[CGRA.scala 67:45]
-  assign PE_5_io_run = io_run; // @[CGRA.scala 40:25]
-  assign PE_5_io_wen = configwen & configPEcnt == 32'h5; // @[CGRA.scala 37:38]
-  assign PE_5_io_waddr = configwaddr; // @[CGRA.scala 38:26]
-  assign PE_5_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 159:101 160:17 26:17]
-  assign PE_5_io_datamemio_rdata = Datamem_5_io_rdata; // @[CGRA.scala 44:27]
-  assign PE_5_io_datamemio_memoptvalid = Datamem_5_io_memoptvalid; // @[CGRA.scala 44:27]
+  assign PE_5_io_inLinks_0 = Link_22_io_out; // @[CGRA.scala 68:47]
+  assign PE_5_io_inLinks_1 = Link_5_io_out; // @[CGRA.scala 63:47]
+  assign PE_5_io_inLinks_2 = Link_12_io_out; // @[CGRA.scala 73:45]
+  assign PE_5_io_run = io_run; // @[CGRA.scala 43:25]
+  assign PE_5_io_wen = configwen & configPEcnt == 32'h5; // @[CGRA.scala 40:38]
+  assign PE_5_io_waddr = configwaddr; // @[CGRA.scala 41:26]
+  assign PE_5_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 165:101 166:17 27:17]
+  assign PE_5_io_datamemio_rdata = Datamem_5_io_rdata; // @[CGRA.scala 47:27]
+  assign PE_5_io_datamemio_memoptvalid = Datamem_5_io_memoptvalid; // @[CGRA.scala 47:27]
   assign PE_6_clock = clock;
   assign PE_6_reset = reset;
-  assign PE_6_io_inLinks_1 = Link_7_io_out; // @[CGRA.scala 57:47]
-  assign PE_6_io_inLinks_3 = Link_21_io_out; // @[CGRA.scala 72:45]
-  assign PE_6_io_run = io_run; // @[CGRA.scala 40:25]
-  assign PE_6_io_wen = configwen & configPEcnt == 32'h6; // @[CGRA.scala 37:38]
-  assign PE_6_io_waddr = configwaddr; // @[CGRA.scala 38:26]
-  assign PE_6_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 159:101 160:17 26:17]
-  assign PE_6_io_datamemio_rdata = Datamem_6_io_rdata; // @[CGRA.scala 44:27]
-  assign PE_6_io_datamemio_memoptvalid = Datamem_6_io_memoptvalid; // @[CGRA.scala 44:27]
+  assign PE_6_io_inLinks_1 = Link_7_io_out; // @[CGRA.scala 63:47]
+  assign PE_6_io_inLinks_3 = Link_21_io_out; // @[CGRA.scala 78:45]
+  assign PE_6_io_run = io_run; // @[CGRA.scala 43:25]
+  assign PE_6_io_wen = configwen & configPEcnt == 32'h6; // @[CGRA.scala 40:38]
+  assign PE_6_io_waddr = configwaddr; // @[CGRA.scala 41:26]
+  assign PE_6_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 165:101 166:17 27:17]
+  assign PE_6_io_datamemio_rdata = Datamem_6_io_rdata; // @[CGRA.scala 47:27]
+  assign PE_6_io_datamemio_memoptvalid = Datamem_6_io_memoptvalid; // @[CGRA.scala 47:27]
   assign PE_7_clock = clock;
   assign PE_7_reset = reset;
-  assign PE_7_io_inLinks_1 = Link_10_io_out; // @[CGRA.scala 57:47]
-  assign PE_7_io_inLinks_2 = Link_18_io_out; // @[CGRA.scala 67:45]
-  assign PE_7_io_inLinks_3 = Link_23_io_out; // @[CGRA.scala 72:45]
-  assign PE_7_io_run = io_run; // @[CGRA.scala 40:25]
-  assign PE_7_io_wen = configwen & configPEcnt == 32'h7; // @[CGRA.scala 37:38]
-  assign PE_7_io_waddr = configwaddr; // @[CGRA.scala 38:26]
-  assign PE_7_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 159:101 160:17 26:17]
-  assign PE_7_io_datamemio_rdata = Datamem_7_io_rdata; // @[CGRA.scala 44:27]
-  assign PE_7_io_datamemio_memoptvalid = Datamem_7_io_memoptvalid; // @[CGRA.scala 44:27]
+  assign PE_7_io_inLinks_1 = Link_10_io_out; // @[CGRA.scala 63:47]
+  assign PE_7_io_inLinks_2 = Link_18_io_out; // @[CGRA.scala 73:45]
+  assign PE_7_io_inLinks_3 = Link_23_io_out; // @[CGRA.scala 78:45]
+  assign PE_7_io_run = io_run; // @[CGRA.scala 43:25]
+  assign PE_7_io_wen = configwen & configPEcnt == 32'h7; // @[CGRA.scala 40:38]
+  assign PE_7_io_waddr = configwaddr; // @[CGRA.scala 41:26]
+  assign PE_7_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 165:101 166:17 27:17]
+  assign PE_7_io_datamemio_rdata = Datamem_7_io_rdata; // @[CGRA.scala 47:27]
+  assign PE_7_io_datamemio_memoptvalid = Datamem_7_io_memoptvalid; // @[CGRA.scala 47:27]
   assign PE_8_clock = clock;
   assign PE_8_reset = reset;
-  assign PE_8_io_inLinks_1 = Link_14_io_out; // @[CGRA.scala 57:47]
-  assign PE_8_io_inLinks_2 = Link_20_io_out; // @[CGRA.scala 67:45]
-  assign PE_8_io_run = io_run; // @[CGRA.scala 40:25]
-  assign PE_8_io_wen = configwen & configPEcnt == 32'h8; // @[CGRA.scala 37:38]
-  assign PE_8_io_waddr = configwaddr; // @[CGRA.scala 38:26]
-  assign PE_8_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 159:101 160:17 26:17]
-  assign PE_8_io_datamemio_rdata = Datamem_8_io_rdata; // @[CGRA.scala 44:27]
-  assign PE_8_io_datamemio_memoptvalid = Datamem_8_io_memoptvalid; // @[CGRA.scala 44:27]
+  assign PE_8_io_inLinks_1 = Link_14_io_out; // @[CGRA.scala 63:47]
+  assign PE_8_io_inLinks_2 = Link_20_io_out; // @[CGRA.scala 73:45]
+  assign PE_8_io_run = io_run; // @[CGRA.scala 43:25]
+  assign PE_8_io_wen = configwen & configPEcnt == 32'h8; // @[CGRA.scala 40:38]
+  assign PE_8_io_waddr = configwaddr; // @[CGRA.scala 41:26]
+  assign PE_8_io_wdata = configwen ? io_axistream_s_data : 32'h0; // @[CGRA.scala 165:101 166:17 27:17]
+  assign PE_8_io_datamemio_rdata = Datamem_8_io_rdata; // @[CGRA.scala 47:27]
+  assign PE_8_io_datamemio_memoptvalid = Datamem_8_io_memoptvalid; // @[CGRA.scala 47:27]
   assign Link_clock = clock;
   assign Link_reset = reset;
-  assign Link_io_in_valid = PE_io_outLinks_0_valid; // @[CGRA.scala 56:31]
-  assign Link_io_in_bits = PE_io_outLinks_0_bits; // @[CGRA.scala 56:31]
+  assign Link_io_in_valid = PE_io_outLinks_0_valid; // @[CGRA.scala 62:31]
+  assign Link_io_in_bits = PE_io_outLinks_0_bits; // @[CGRA.scala 62:31]
   assign Link_1_clock = clock;
   assign Link_1_reset = reset;
-  assign Link_1_io_in_valid = PE_io_outLinks_3_valid; // @[CGRA.scala 66:31]
-  assign Link_1_io_in_bits = PE_io_outLinks_3_bits; // @[CGRA.scala 66:31]
+  assign Link_1_io_in_valid = PE_io_outLinks_3_valid; // @[CGRA.scala 72:31]
+  assign Link_1_io_in_bits = PE_io_outLinks_3_bits; // @[CGRA.scala 72:31]
   assign Link_2_clock = clock;
   assign Link_2_reset = reset;
-  assign Link_2_io_in_valid = PE_1_io_outLinks_0_valid; // @[CGRA.scala 56:31]
-  assign Link_2_io_in_bits = PE_1_io_outLinks_0_bits; // @[CGRA.scala 56:31]
+  assign Link_2_io_in_valid = PE_1_io_outLinks_0_valid; // @[CGRA.scala 62:31]
+  assign Link_2_io_in_bits = PE_1_io_outLinks_0_bits; // @[CGRA.scala 62:31]
   assign Link_3_clock = clock;
   assign Link_3_reset = reset;
-  assign Link_3_io_in_valid = PE_1_io_outLinks_3_valid; // @[CGRA.scala 66:31]
-  assign Link_3_io_in_bits = PE_1_io_outLinks_3_bits; // @[CGRA.scala 66:31]
+  assign Link_3_io_in_valid = PE_1_io_outLinks_3_valid; // @[CGRA.scala 72:31]
+  assign Link_3_io_in_bits = PE_1_io_outLinks_3_bits; // @[CGRA.scala 72:31]
   assign Link_4_clock = clock;
   assign Link_4_reset = reset;
-  assign Link_4_io_in_valid = PE_1_io_outLinks_2_valid; // @[CGRA.scala 71:31]
-  assign Link_4_io_in_bits = PE_1_io_outLinks_2_bits; // @[CGRA.scala 71:31]
+  assign Link_4_io_in_valid = PE_1_io_outLinks_2_valid; // @[CGRA.scala 77:31]
+  assign Link_4_io_in_bits = PE_1_io_outLinks_2_bits; // @[CGRA.scala 77:31]
   assign Link_5_clock = clock;
   assign Link_5_reset = reset;
-  assign Link_5_io_in_valid = PE_2_io_outLinks_0_valid; // @[CGRA.scala 56:31]
-  assign Link_5_io_in_bits = PE_2_io_outLinks_0_bits; // @[CGRA.scala 56:31]
+  assign Link_5_io_in_valid = PE_2_io_outLinks_0_valid; // @[CGRA.scala 62:31]
+  assign Link_5_io_in_bits = PE_2_io_outLinks_0_bits; // @[CGRA.scala 62:31]
   assign Link_6_clock = clock;
   assign Link_6_reset = reset;
-  assign Link_6_io_in_valid = PE_2_io_outLinks_2_valid; // @[CGRA.scala 71:31]
-  assign Link_6_io_in_bits = PE_2_io_outLinks_2_bits; // @[CGRA.scala 71:31]
+  assign Link_6_io_in_valid = PE_2_io_outLinks_2_valid; // @[CGRA.scala 77:31]
+  assign Link_6_io_in_bits = PE_2_io_outLinks_2_bits; // @[CGRA.scala 77:31]
   assign Link_7_clock = clock;
   assign Link_7_reset = reset;
-  assign Link_7_io_in_valid = PE_3_io_outLinks_0_valid; // @[CGRA.scala 56:31]
-  assign Link_7_io_in_bits = PE_3_io_outLinks_0_bits; // @[CGRA.scala 56:31]
+  assign Link_7_io_in_valid = PE_3_io_outLinks_0_valid; // @[CGRA.scala 62:31]
+  assign Link_7_io_in_bits = PE_3_io_outLinks_0_bits; // @[CGRA.scala 62:31]
   assign Link_8_clock = clock;
   assign Link_8_reset = reset;
-  assign Link_8_io_in_valid = PE_3_io_outLinks_1_valid; // @[CGRA.scala 61:31]
-  assign Link_8_io_in_bits = PE_3_io_outLinks_1_bits; // @[CGRA.scala 61:31]
+  assign Link_8_io_in_valid = PE_3_io_outLinks_1_valid; // @[CGRA.scala 67:31]
+  assign Link_8_io_in_bits = PE_3_io_outLinks_1_bits; // @[CGRA.scala 67:31]
   assign Link_9_clock = clock;
   assign Link_9_reset = reset;
-  assign Link_9_io_in_valid = PE_3_io_outLinks_3_valid; // @[CGRA.scala 66:31]
-  assign Link_9_io_in_bits = PE_3_io_outLinks_3_bits; // @[CGRA.scala 66:31]
+  assign Link_9_io_in_valid = PE_3_io_outLinks_3_valid; // @[CGRA.scala 72:31]
+  assign Link_9_io_in_bits = PE_3_io_outLinks_3_bits; // @[CGRA.scala 72:31]
   assign Link_10_clock = clock;
   assign Link_10_reset = reset;
-  assign Link_10_io_in_valid = PE_4_io_outLinks_0_valid; // @[CGRA.scala 56:31]
-  assign Link_10_io_in_bits = PE_4_io_outLinks_0_bits; // @[CGRA.scala 56:31]
+  assign Link_10_io_in_valid = PE_4_io_outLinks_0_valid; // @[CGRA.scala 62:31]
+  assign Link_10_io_in_bits = PE_4_io_outLinks_0_bits; // @[CGRA.scala 62:31]
   assign Link_11_clock = clock;
   assign Link_11_reset = reset;
-  assign Link_11_io_in_valid = PE_4_io_outLinks_1_valid; // @[CGRA.scala 61:31]
-  assign Link_11_io_in_bits = PE_4_io_outLinks_1_bits; // @[CGRA.scala 61:31]
+  assign Link_11_io_in_valid = PE_4_io_outLinks_1_valid; // @[CGRA.scala 67:31]
+  assign Link_11_io_in_bits = PE_4_io_outLinks_1_bits; // @[CGRA.scala 67:31]
   assign Link_12_clock = clock;
   assign Link_12_reset = reset;
-  assign Link_12_io_in_valid = PE_4_io_outLinks_3_valid; // @[CGRA.scala 66:31]
-  assign Link_12_io_in_bits = PE_4_io_outLinks_3_bits; // @[CGRA.scala 66:31]
+  assign Link_12_io_in_valid = PE_4_io_outLinks_3_valid; // @[CGRA.scala 72:31]
+  assign Link_12_io_in_bits = PE_4_io_outLinks_3_bits; // @[CGRA.scala 72:31]
   assign Link_13_clock = clock;
   assign Link_13_reset = reset;
-  assign Link_13_io_in_valid = PE_4_io_outLinks_2_valid; // @[CGRA.scala 71:31]
-  assign Link_13_io_in_bits = PE_4_io_outLinks_2_bits; // @[CGRA.scala 71:31]
+  assign Link_13_io_in_valid = PE_4_io_outLinks_2_valid; // @[CGRA.scala 77:31]
+  assign Link_13_io_in_bits = PE_4_io_outLinks_2_bits; // @[CGRA.scala 77:31]
   assign Link_14_clock = clock;
   assign Link_14_reset = reset;
-  assign Link_14_io_in_valid = PE_5_io_outLinks_0_valid; // @[CGRA.scala 56:31]
-  assign Link_14_io_in_bits = PE_5_io_outLinks_0_bits; // @[CGRA.scala 56:31]
+  assign Link_14_io_in_valid = PE_5_io_outLinks_0_valid; // @[CGRA.scala 62:31]
+  assign Link_14_io_in_bits = PE_5_io_outLinks_0_bits; // @[CGRA.scala 62:31]
   assign Link_15_clock = clock;
   assign Link_15_reset = reset;
-  assign Link_15_io_in_valid = PE_5_io_outLinks_1_valid; // @[CGRA.scala 61:31]
-  assign Link_15_io_in_bits = PE_5_io_outLinks_1_bits; // @[CGRA.scala 61:31]
+  assign Link_15_io_in_valid = PE_5_io_outLinks_1_valid; // @[CGRA.scala 67:31]
+  assign Link_15_io_in_bits = PE_5_io_outLinks_1_bits; // @[CGRA.scala 67:31]
   assign Link_16_clock = clock;
   assign Link_16_reset = reset;
-  assign Link_16_io_in_valid = PE_5_io_outLinks_2_valid; // @[CGRA.scala 71:31]
-  assign Link_16_io_in_bits = PE_5_io_outLinks_2_bits; // @[CGRA.scala 71:31]
+  assign Link_16_io_in_valid = PE_5_io_outLinks_2_valid; // @[CGRA.scala 77:31]
+  assign Link_16_io_in_bits = PE_5_io_outLinks_2_bits; // @[CGRA.scala 77:31]
   assign Link_17_clock = clock;
   assign Link_17_reset = reset;
-  assign Link_17_io_in_valid = PE_6_io_outLinks_1_valid; // @[CGRA.scala 61:31]
-  assign Link_17_io_in_bits = PE_6_io_outLinks_1_bits; // @[CGRA.scala 61:31]
+  assign Link_17_io_in_valid = PE_6_io_outLinks_1_valid; // @[CGRA.scala 67:31]
+  assign Link_17_io_in_bits = PE_6_io_outLinks_1_bits; // @[CGRA.scala 67:31]
   assign Link_18_clock = clock;
   assign Link_18_reset = reset;
-  assign Link_18_io_in_valid = PE_6_io_outLinks_3_valid; // @[CGRA.scala 66:31]
-  assign Link_18_io_in_bits = PE_6_io_outLinks_3_bits; // @[CGRA.scala 66:31]
+  assign Link_18_io_in_valid = PE_6_io_outLinks_3_valid; // @[CGRA.scala 72:31]
+  assign Link_18_io_in_bits = PE_6_io_outLinks_3_bits; // @[CGRA.scala 72:31]
   assign Link_19_clock = clock;
   assign Link_19_reset = reset;
-  assign Link_19_io_in_valid = PE_7_io_outLinks_1_valid; // @[CGRA.scala 61:31]
-  assign Link_19_io_in_bits = PE_7_io_outLinks_1_bits; // @[CGRA.scala 61:31]
+  assign Link_19_io_in_valid = PE_7_io_outLinks_1_valid; // @[CGRA.scala 67:31]
+  assign Link_19_io_in_bits = PE_7_io_outLinks_1_bits; // @[CGRA.scala 67:31]
   assign Link_20_clock = clock;
   assign Link_20_reset = reset;
-  assign Link_20_io_in_valid = PE_7_io_outLinks_3_valid; // @[CGRA.scala 66:31]
-  assign Link_20_io_in_bits = PE_7_io_outLinks_3_bits; // @[CGRA.scala 66:31]
+  assign Link_20_io_in_valid = PE_7_io_outLinks_3_valid; // @[CGRA.scala 72:31]
+  assign Link_20_io_in_bits = PE_7_io_outLinks_3_bits; // @[CGRA.scala 72:31]
   assign Link_21_clock = clock;
   assign Link_21_reset = reset;
-  assign Link_21_io_in_valid = PE_7_io_outLinks_2_valid; // @[CGRA.scala 71:31]
-  assign Link_21_io_in_bits = PE_7_io_outLinks_2_bits; // @[CGRA.scala 71:31]
+  assign Link_21_io_in_valid = PE_7_io_outLinks_2_valid; // @[CGRA.scala 77:31]
+  assign Link_21_io_in_bits = PE_7_io_outLinks_2_bits; // @[CGRA.scala 77:31]
   assign Link_22_clock = clock;
   assign Link_22_reset = reset;
-  assign Link_22_io_in_valid = PE_8_io_outLinks_1_valid; // @[CGRA.scala 61:31]
-  assign Link_22_io_in_bits = PE_8_io_outLinks_1_bits; // @[CGRA.scala 61:31]
+  assign Link_22_io_in_valid = PE_8_io_outLinks_1_valid; // @[CGRA.scala 67:31]
+  assign Link_22_io_in_bits = PE_8_io_outLinks_1_bits; // @[CGRA.scala 67:31]
   assign Link_23_clock = clock;
   assign Link_23_reset = reset;
-  assign Link_23_io_in_valid = PE_8_io_outLinks_2_valid; // @[CGRA.scala 71:31]
-  assign Link_23_io_in_bits = PE_8_io_outLinks_2_bits; // @[CGRA.scala 71:31]
+  assign Link_23_io_in_valid = PE_8_io_outLinks_2_valid; // @[CGRA.scala 77:31]
+  assign Link_23_io_in_bits = PE_8_io_outLinks_2_bits; // @[CGRA.scala 77:31]
   assign Datamem_clock = clock;
   assign Datamem_io_wen = ctrlregs_0 == 32'h2 & io_axistream_s_valid & io_axistream_s_ready ? ctrlregs_2 == 32'h0 :
-    PE_io_datamemio_wen; // @[CGRA.scala 45:31]
-  assign Datamem_io_waddr = _T_18 ? _T_25 : PE_io_datamemio_waddr; // @[CGRA.scala 46:32]
-  assign Datamem_io_wdata = _T_18 ? io_axistream_s_data : PE_io_datamemio_wdata; // @[CGRA.scala 47:32]
-  assign Datamem_io_ren = PE_io_datamemio_ren; // @[CGRA.scala 44:27]
-  assign Datamem_io_raddr = PE_io_datamemio_raddr; // @[CGRA.scala 44:27]
+    PE_io_datamemio_wen; // @[CGRA.scala 48:31]
+  assign Datamem_io_waddr = _T_18 ? _T_25 : PE_io_datamemio_waddr; // @[CGRA.scala 49:32]
+  assign Datamem_io_wdata = _T_18 ? io_axistream_s_data : PE_io_datamemio_wdata; // @[CGRA.scala 50:32]
+  assign Datamem_io_ren = _T_29 | PE_io_datamemio_ren; // @[CGRA.scala 53:31]
+  assign Datamem_io_raddr = ctrlregs_0 == 32'h4 ? _T_35 : PE_io_datamemio_raddr; // @[CGRA.scala 52:33]
   assign Datamem_1_clock = clock;
   assign Datamem_1_io_wen = ctrlregs_0 == 32'h2 & io_axistream_s_valid & io_axistream_s_ready ? ctrlregs_2 == 32'h1 :
-    PE_1_io_datamemio_wen; // @[CGRA.scala 45:31]
-  assign Datamem_1_io_waddr = _T_18 ? _T_25 : PE_1_io_datamemio_waddr; // @[CGRA.scala 46:32]
-  assign Datamem_1_io_wdata = _T_18 ? io_axistream_s_data : PE_1_io_datamemio_wdata; // @[CGRA.scala 47:32]
-  assign Datamem_1_io_ren = PE_1_io_datamemio_ren; // @[CGRA.scala 44:27]
-  assign Datamem_1_io_raddr = PE_1_io_datamemio_raddr; // @[CGRA.scala 44:27]
+    PE_1_io_datamemio_wen; // @[CGRA.scala 48:31]
+  assign Datamem_1_io_waddr = _T_18 ? _T_25 : PE_1_io_datamemio_waddr; // @[CGRA.scala 49:32]
+  assign Datamem_1_io_wdata = _T_18 ? io_axistream_s_data : PE_1_io_datamemio_wdata; // @[CGRA.scala 50:32]
+  assign Datamem_1_io_ren = _T_29 | PE_1_io_datamemio_ren; // @[CGRA.scala 53:31]
+  assign Datamem_1_io_raddr = ctrlregs_0 == 32'h4 ? _T_35 : PE_1_io_datamemio_raddr; // @[CGRA.scala 52:33]
   assign Datamem_2_clock = clock;
   assign Datamem_2_io_wen = ctrlregs_0 == 32'h2 & io_axistream_s_valid & io_axistream_s_ready ? ctrlregs_2 == 32'h2 :
-    PE_2_io_datamemio_wen; // @[CGRA.scala 45:31]
-  assign Datamem_2_io_waddr = _T_18 ? _T_25 : PE_2_io_datamemio_waddr; // @[CGRA.scala 46:32]
-  assign Datamem_2_io_wdata = _T_18 ? io_axistream_s_data : PE_2_io_datamemio_wdata; // @[CGRA.scala 47:32]
-  assign Datamem_2_io_ren = PE_2_io_datamemio_ren; // @[CGRA.scala 44:27]
-  assign Datamem_2_io_raddr = PE_2_io_datamemio_raddr; // @[CGRA.scala 44:27]
+    PE_2_io_datamemio_wen; // @[CGRA.scala 48:31]
+  assign Datamem_2_io_waddr = _T_18 ? _T_25 : PE_2_io_datamemio_waddr; // @[CGRA.scala 49:32]
+  assign Datamem_2_io_wdata = _T_18 ? io_axistream_s_data : PE_2_io_datamemio_wdata; // @[CGRA.scala 50:32]
+  assign Datamem_2_io_ren = _T_29 | PE_2_io_datamemio_ren; // @[CGRA.scala 53:31]
+  assign Datamem_2_io_raddr = ctrlregs_0 == 32'h4 ? _T_35 : PE_2_io_datamemio_raddr; // @[CGRA.scala 52:33]
   assign Datamem_3_clock = clock;
   assign Datamem_3_io_wen = ctrlregs_0 == 32'h2 & io_axistream_s_valid & io_axistream_s_ready ? ctrlregs_2 == 32'h3 :
-    PE_3_io_datamemio_wen; // @[CGRA.scala 45:31]
-  assign Datamem_3_io_waddr = _T_18 ? _T_25 : PE_3_io_datamemio_waddr; // @[CGRA.scala 46:32]
-  assign Datamem_3_io_wdata = _T_18 ? io_axistream_s_data : PE_3_io_datamemio_wdata; // @[CGRA.scala 47:32]
-  assign Datamem_3_io_ren = PE_3_io_datamemio_ren; // @[CGRA.scala 44:27]
-  assign Datamem_3_io_raddr = PE_3_io_datamemio_raddr; // @[CGRA.scala 44:27]
+    PE_3_io_datamemio_wen; // @[CGRA.scala 48:31]
+  assign Datamem_3_io_waddr = _T_18 ? _T_25 : PE_3_io_datamemio_waddr; // @[CGRA.scala 49:32]
+  assign Datamem_3_io_wdata = _T_18 ? io_axistream_s_data : PE_3_io_datamemio_wdata; // @[CGRA.scala 50:32]
+  assign Datamem_3_io_ren = _T_29 | PE_3_io_datamemio_ren; // @[CGRA.scala 53:31]
+  assign Datamem_3_io_raddr = ctrlregs_0 == 32'h4 ? _T_35 : PE_3_io_datamemio_raddr; // @[CGRA.scala 52:33]
   assign Datamem_4_clock = clock;
   assign Datamem_4_io_wen = ctrlregs_0 == 32'h2 & io_axistream_s_valid & io_axistream_s_ready ? ctrlregs_2 == 32'h4 :
-    PE_4_io_datamemio_wen; // @[CGRA.scala 45:31]
-  assign Datamem_4_io_waddr = _T_18 ? _T_25 : PE_4_io_datamemio_waddr; // @[CGRA.scala 46:32]
-  assign Datamem_4_io_wdata = _T_18 ? io_axistream_s_data : PE_4_io_datamemio_wdata; // @[CGRA.scala 47:32]
-  assign Datamem_4_io_ren = PE_4_io_datamemio_ren; // @[CGRA.scala 44:27]
-  assign Datamem_4_io_raddr = PE_4_io_datamemio_raddr; // @[CGRA.scala 44:27]
+    PE_4_io_datamemio_wen; // @[CGRA.scala 48:31]
+  assign Datamem_4_io_waddr = _T_18 ? _T_25 : PE_4_io_datamemio_waddr; // @[CGRA.scala 49:32]
+  assign Datamem_4_io_wdata = _T_18 ? io_axistream_s_data : PE_4_io_datamemio_wdata; // @[CGRA.scala 50:32]
+  assign Datamem_4_io_ren = _T_29 | PE_4_io_datamemio_ren; // @[CGRA.scala 53:31]
+  assign Datamem_4_io_raddr = ctrlregs_0 == 32'h4 ? _T_35 : PE_4_io_datamemio_raddr; // @[CGRA.scala 52:33]
   assign Datamem_5_clock = clock;
   assign Datamem_5_io_wen = ctrlregs_0 == 32'h2 & io_axistream_s_valid & io_axistream_s_ready ? ctrlregs_2 == 32'h5 :
-    PE_5_io_datamemio_wen; // @[CGRA.scala 45:31]
-  assign Datamem_5_io_waddr = _T_18 ? _T_25 : PE_5_io_datamemio_waddr; // @[CGRA.scala 46:32]
-  assign Datamem_5_io_wdata = _T_18 ? io_axistream_s_data : PE_5_io_datamemio_wdata; // @[CGRA.scala 47:32]
-  assign Datamem_5_io_ren = PE_5_io_datamemio_ren; // @[CGRA.scala 44:27]
-  assign Datamem_5_io_raddr = PE_5_io_datamemio_raddr; // @[CGRA.scala 44:27]
+    PE_5_io_datamemio_wen; // @[CGRA.scala 48:31]
+  assign Datamem_5_io_waddr = _T_18 ? _T_25 : PE_5_io_datamemio_waddr; // @[CGRA.scala 49:32]
+  assign Datamem_5_io_wdata = _T_18 ? io_axistream_s_data : PE_5_io_datamemio_wdata; // @[CGRA.scala 50:32]
+  assign Datamem_5_io_ren = _T_29 | PE_5_io_datamemio_ren; // @[CGRA.scala 53:31]
+  assign Datamem_5_io_raddr = ctrlregs_0 == 32'h4 ? _T_35 : PE_5_io_datamemio_raddr; // @[CGRA.scala 52:33]
   assign Datamem_6_clock = clock;
   assign Datamem_6_io_wen = ctrlregs_0 == 32'h2 & io_axistream_s_valid & io_axistream_s_ready ? ctrlregs_2 == 32'h6 :
-    PE_6_io_datamemio_wen; // @[CGRA.scala 45:31]
-  assign Datamem_6_io_waddr = _T_18 ? _T_25 : PE_6_io_datamemio_waddr; // @[CGRA.scala 46:32]
-  assign Datamem_6_io_wdata = _T_18 ? io_axistream_s_data : PE_6_io_datamemio_wdata; // @[CGRA.scala 47:32]
-  assign Datamem_6_io_ren = PE_6_io_datamemio_ren; // @[CGRA.scala 44:27]
-  assign Datamem_6_io_raddr = PE_6_io_datamemio_raddr; // @[CGRA.scala 44:27]
+    PE_6_io_datamemio_wen; // @[CGRA.scala 48:31]
+  assign Datamem_6_io_waddr = _T_18 ? _T_25 : PE_6_io_datamemio_waddr; // @[CGRA.scala 49:32]
+  assign Datamem_6_io_wdata = _T_18 ? io_axistream_s_data : PE_6_io_datamemio_wdata; // @[CGRA.scala 50:32]
+  assign Datamem_6_io_ren = _T_29 | PE_6_io_datamemio_ren; // @[CGRA.scala 53:31]
+  assign Datamem_6_io_raddr = ctrlregs_0 == 32'h4 ? _T_35 : PE_6_io_datamemio_raddr; // @[CGRA.scala 52:33]
   assign Datamem_7_clock = clock;
   assign Datamem_7_io_wen = ctrlregs_0 == 32'h2 & io_axistream_s_valid & io_axistream_s_ready ? ctrlregs_2 == 32'h7 :
-    PE_7_io_datamemio_wen; // @[CGRA.scala 45:31]
-  assign Datamem_7_io_waddr = _T_18 ? _T_25 : PE_7_io_datamemio_waddr; // @[CGRA.scala 46:32]
-  assign Datamem_7_io_wdata = _T_18 ? io_axistream_s_data : PE_7_io_datamemio_wdata; // @[CGRA.scala 47:32]
-  assign Datamem_7_io_ren = PE_7_io_datamemio_ren; // @[CGRA.scala 44:27]
-  assign Datamem_7_io_raddr = PE_7_io_datamemio_raddr; // @[CGRA.scala 44:27]
+    PE_7_io_datamemio_wen; // @[CGRA.scala 48:31]
+  assign Datamem_7_io_waddr = _T_18 ? _T_25 : PE_7_io_datamemio_waddr; // @[CGRA.scala 49:32]
+  assign Datamem_7_io_wdata = _T_18 ? io_axistream_s_data : PE_7_io_datamemio_wdata; // @[CGRA.scala 50:32]
+  assign Datamem_7_io_ren = _T_29 | PE_7_io_datamemio_ren; // @[CGRA.scala 53:31]
+  assign Datamem_7_io_raddr = ctrlregs_0 == 32'h4 ? _T_35 : PE_7_io_datamemio_raddr; // @[CGRA.scala 52:33]
   assign Datamem_8_clock = clock;
   assign Datamem_8_io_wen = ctrlregs_0 == 32'h2 & io_axistream_s_valid & io_axistream_s_ready ? ctrlregs_2 == 32'h8 :
-    PE_8_io_datamemio_wen; // @[CGRA.scala 45:31]
-  assign Datamem_8_io_waddr = _T_18 ? _T_25 : PE_8_io_datamemio_waddr; // @[CGRA.scala 46:32]
-  assign Datamem_8_io_wdata = _T_18 ? io_axistream_s_data : PE_8_io_datamemio_wdata; // @[CGRA.scala 47:32]
-  assign Datamem_8_io_ren = PE_8_io_datamemio_ren; // @[CGRA.scala 44:27]
-  assign Datamem_8_io_raddr = PE_8_io_datamemio_raddr; // @[CGRA.scala 44:27]
+    PE_8_io_datamemio_wen; // @[CGRA.scala 48:31]
+  assign Datamem_8_io_waddr = _T_18 ? _T_25 : PE_8_io_datamemio_waddr; // @[CGRA.scala 49:32]
+  assign Datamem_8_io_wdata = _T_18 ? io_axistream_s_data : PE_8_io_datamemio_wdata; // @[CGRA.scala 50:32]
+  assign Datamem_8_io_ren = _T_29 | PE_8_io_datamemio_ren; // @[CGRA.scala 53:31]
+  assign Datamem_8_io_raddr = ctrlregs_0 == 32'h4 ? _T_35 : PE_8_io_datamemio_raddr; // @[CGRA.scala 52:33]
   always @(posedge clock) begin
-    if (reset) begin // @[CGRA.scala 18:27]
-      ctrlregs_0 <= 32'h0; // @[CGRA.scala 18:27]
-    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 182:30]
-      if (3'h0 == currentAddressw[2:0]) begin // @[CGRA.scala 183:35]
-        if (2'h0 == statew) begin // @[CGRA.scala 100:18]
-          ctrlregs_0 <= 32'h0; // @[CGRA.scala 91:23]
+    if (reset) begin // @[CGRA.scala 19:27]
+      ctrlregs_0 <= 32'h0; // @[CGRA.scala 19:27]
+    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 197:30]
+      if (3'h0 == currentAddressw[2:0]) begin // @[CGRA.scala 198:35]
+        if (2'h0 == statew) begin // @[CGRA.scala 106:18]
+          ctrlregs_0 <= 32'h0; // @[CGRA.scala 97:23]
         end else begin
-          ctrlregs_0 <= _GEN_17;
+          ctrlregs_0 <= _GEN_18;
         end
       end else begin
-        ctrlregs_0 <= _GEN_81;
+        ctrlregs_0 <= _GEN_121;
       end
     end else begin
-      ctrlregs_0 <= _GEN_81;
+      ctrlregs_0 <= _GEN_121;
     end
-    if (reset) begin // @[CGRA.scala 18:27]
-      ctrlregs_1 <= 32'h0; // @[CGRA.scala 18:27]
-    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 182:30]
-      if (3'h1 == currentAddressw[2:0]) begin // @[CGRA.scala 183:35]
-        if (2'h0 == statew) begin // @[CGRA.scala 100:18]
-          ctrlregs_1 <= 32'h0; // @[CGRA.scala 91:23]
+    if (reset) begin // @[CGRA.scala 19:27]
+      ctrlregs_1 <= 32'h0; // @[CGRA.scala 19:27]
+    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 197:30]
+      if (3'h1 == currentAddressw[2:0]) begin // @[CGRA.scala 198:35]
+        if (2'h0 == statew) begin // @[CGRA.scala 106:18]
+          ctrlregs_1 <= 32'h0; // @[CGRA.scala 97:23]
         end else begin
-          ctrlregs_1 <= _GEN_17;
+          ctrlregs_1 <= _GEN_18;
         end
       end else begin
-        ctrlregs_1 <= _GEN_82;
+        ctrlregs_1 <= _GEN_122;
       end
     end else begin
-      ctrlregs_1 <= _GEN_82;
+      ctrlregs_1 <= _GEN_122;
     end
-    if (reset) begin // @[CGRA.scala 18:27]
-      ctrlregs_2 <= 32'h0; // @[CGRA.scala 18:27]
-    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 182:30]
-      if (3'h2 == currentAddressw[2:0]) begin // @[CGRA.scala 183:35]
-        if (2'h0 == statew) begin // @[CGRA.scala 100:18]
-          ctrlregs_2 <= 32'h0; // @[CGRA.scala 91:23]
+    if (reset) begin // @[CGRA.scala 19:27]
+      ctrlregs_2 <= 32'h0; // @[CGRA.scala 19:27]
+    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 197:30]
+      if (3'h2 == currentAddressw[2:0]) begin // @[CGRA.scala 198:35]
+        if (2'h0 == statew) begin // @[CGRA.scala 106:18]
+          ctrlregs_2 <= 32'h0; // @[CGRA.scala 97:23]
         end else begin
-          ctrlregs_2 <= _GEN_17;
+          ctrlregs_2 <= _GEN_18;
         end
       end else begin
-        ctrlregs_2 <= _GEN_83;
+        ctrlregs_2 <= _GEN_123;
       end
     end else begin
-      ctrlregs_2 <= _GEN_83;
+      ctrlregs_2 <= _GEN_123;
     end
-    if (reset) begin // @[CGRA.scala 18:27]
-      ctrlregs_3 <= 32'h0; // @[CGRA.scala 18:27]
-    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 182:30]
-      if (3'h3 == currentAddressw[2:0]) begin // @[CGRA.scala 183:35]
-        if (2'h0 == statew) begin // @[CGRA.scala 100:18]
-          ctrlregs_3 <= 32'h0; // @[CGRA.scala 91:23]
+    if (reset) begin // @[CGRA.scala 19:27]
+      ctrlregs_3 <= 32'h0; // @[CGRA.scala 19:27]
+    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 197:30]
+      if (3'h3 == currentAddressw[2:0]) begin // @[CGRA.scala 198:35]
+        if (2'h0 == statew) begin // @[CGRA.scala 106:18]
+          ctrlregs_3 <= 32'h0; // @[CGRA.scala 97:23]
         end else begin
-          ctrlregs_3 <= _GEN_17;
+          ctrlregs_3 <= _GEN_18;
         end
       end else begin
-        ctrlregs_3 <= _GEN_84;
+        ctrlregs_3 <= _GEN_124;
       end
     end else begin
-      ctrlregs_3 <= _GEN_84;
+      ctrlregs_3 <= _GEN_124;
     end
-    if (reset) begin // @[CGRA.scala 18:27]
-      ctrlregs_4 <= 32'h0; // @[CGRA.scala 18:27]
-    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 182:30]
-      if (3'h4 == currentAddressw[2:0]) begin // @[CGRA.scala 183:35]
-        if (2'h0 == statew) begin // @[CGRA.scala 100:18]
-          ctrlregs_4 <= 32'h0; // @[CGRA.scala 91:23]
+    if (reset) begin // @[CGRA.scala 19:27]
+      ctrlregs_4 <= 32'h0; // @[CGRA.scala 19:27]
+    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 197:30]
+      if (3'h4 == currentAddressw[2:0]) begin // @[CGRA.scala 198:35]
+        if (2'h0 == statew) begin // @[CGRA.scala 106:18]
+          ctrlregs_4 <= 32'h0; // @[CGRA.scala 97:23]
         end else begin
-          ctrlregs_4 <= _GEN_17;
+          ctrlregs_4 <= _GEN_18;
         end
       end else begin
-        ctrlregs_4 <= _GEN_85;
+        ctrlregs_4 <= _GEN_125;
       end
-    end else if (_T_20) begin // @[CGRA.scala 184:46]
-      ctrlregs_4 <= _T_134; // @[CGRA.scala 185:21]
     end else begin
-      ctrlregs_4 <= _GEN_85;
+      ctrlregs_4 <= _GEN_125;
     end
-    if (reset) begin // @[CGRA.scala 22:30]
-      configwaddr <= 32'h0; // @[CGRA.scala 22:30]
-    end else if (configwen) begin // @[CGRA.scala 159:101]
-      if (config_finish) begin // @[CGRA.scala 162:23]
+    if (reset) begin // @[CGRA.scala 19:27]
+      ctrlregs_5 <= 32'h0; // @[CGRA.scala 19:27]
+    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 197:30]
+      if (3'h5 == currentAddressw[2:0]) begin // @[CGRA.scala 198:35]
+        if (2'h0 == statew) begin // @[CGRA.scala 106:18]
+          ctrlregs_5 <= 32'h0; // @[CGRA.scala 97:23]
+        end else begin
+          ctrlregs_5 <= _GEN_18;
+        end
+      end else begin
+        ctrlregs_5 <= _GEN_126;
+      end
+    end else begin
+      ctrlregs_5 <= _GEN_126;
+    end
+    if (reset) begin // @[CGRA.scala 23:30]
+      configwaddr <= 32'h0; // @[CGRA.scala 23:30]
+    end else if (configwen) begin // @[CGRA.scala 165:101]
+      if (config_finish) begin // @[CGRA.scala 168:23]
         configwaddr <= 32'h0;
-      end else if (configwaddr < 32'h6c) begin // @[CGRA.scala 155:25]
+      end else if (configwaddr < 32'h6c) begin // @[CGRA.scala 161:25]
         configwaddr <= _configwaddrnext_T_2;
       end else begin
         configwaddr <= 32'h0;
       end
     end
-    if (reset) begin // @[CGRA.scala 23:30]
-      configPEcnt <= 32'h0; // @[CGRA.scala 23:30]
-    end else if (configwen) begin // @[CGRA.scala 159:101]
-      if (_config_finish_T) begin // @[CGRA.scala 163:38]
-        if (config_finish) begin // @[CGRA.scala 164:25]
+    if (reset) begin // @[CGRA.scala 24:30]
+      configPEcnt <= 32'h0; // @[CGRA.scala 24:30]
+    end else if (configwen) begin // @[CGRA.scala 165:101]
+      if (_config_finish_T) begin // @[CGRA.scala 169:38]
+        if (config_finish) begin // @[CGRA.scala 170:25]
           configPEcnt <= 32'h0;
         end else begin
           configPEcnt <= configPEnext;
         end
       end
     end
-    if (reset) begin // @[CGRA.scala 83:23]
-      statew <= 2'h0; // @[CGRA.scala 83:23]
-    end else if (2'h0 == statew) begin // @[CGRA.scala 100:18]
-      if (io_axilite_s_awaddr_valid & io_axilite_s_awaddr_ready) begin // @[CGRA.scala 102:66]
-        statew <= 2'h1; // @[CGRA.scala 104:16]
+    if (reset) begin // @[CGRA.scala 89:23]
+      statew <= 2'h0; // @[CGRA.scala 89:23]
+    end else if (2'h0 == statew) begin // @[CGRA.scala 106:18]
+      if (io_axilite_s_awaddr_valid & io_axilite_s_awaddr_ready) begin // @[CGRA.scala 108:66]
+        statew <= 2'h1; // @[CGRA.scala 110:16]
       end
-    end else if (2'h1 == statew) begin // @[CGRA.scala 100:18]
-      if (io_axilite_s_wdata_valid & io_axilite_s_wdata_ready) begin // @[CGRA.scala 108:65]
-        statew <= 2'h2; // @[CGRA.scala 111:16]
+    end else if (2'h1 == statew) begin // @[CGRA.scala 106:18]
+      if (io_axilite_s_wdata_valid & io_axilite_s_wdata_ready) begin // @[CGRA.scala 114:65]
+        statew <= 2'h2; // @[CGRA.scala 117:16]
       end
-    end else if (2'h2 == statew) begin // @[CGRA.scala 100:18]
-      statew <= _GEN_12;
+    end else if (2'h2 == statew) begin // @[CGRA.scala 106:18]
+      statew <= _GEN_13;
     end
-    if (reset) begin // @[CGRA.scala 84:23]
-      stater <= 2'h0; // @[CGRA.scala 84:23]
-    end else if (2'h0 == stater) begin // @[CGRA.scala 125:18]
-      if (io_axilite_s_araddr_valid & io_axilite_s_araddr_ready) begin // @[CGRA.scala 127:66]
-        stater <= 2'h1; // @[CGRA.scala 129:16]
+    if (reset) begin // @[CGRA.scala 90:23]
+      stater <= 2'h0; // @[CGRA.scala 90:23]
+    end else if (2'h0 == stater) begin // @[CGRA.scala 131:18]
+      if (io_axilite_s_araddr_valid & io_axilite_s_araddr_ready) begin // @[CGRA.scala 133:66]
+        stater <= 2'h1; // @[CGRA.scala 135:16]
       end
-    end else if (2'h1 == stater) begin // @[CGRA.scala 125:18]
-      if (io_axilite_s_rdata_valid & io_axilite_s_rdata_ready) begin // @[CGRA.scala 133:65]
-        stater <= 2'h0; // @[CGRA.scala 134:16]
-      end
-    end
-    if (reset) begin // @[CGRA.scala 85:32]
-      currentAddressr <= 32'h0; // @[CGRA.scala 85:32]
-    end else if (2'h0 == stater) begin // @[CGRA.scala 125:18]
-      if (io_axilite_s_araddr_valid & io_axilite_s_araddr_ready) begin // @[CGRA.scala 127:66]
-        currentAddressr <= {{2'd0}, _currentAddressr_T_1[31:2]}; // @[CGRA.scala 128:24]
+    end else if (2'h1 == stater) begin // @[CGRA.scala 131:18]
+      if (io_axilite_s_rdata_valid & io_axilite_s_rdata_ready) begin // @[CGRA.scala 139:65]
+        stater <= 2'h0; // @[CGRA.scala 140:16]
       end
     end
-    if (reset) begin // @[CGRA.scala 86:32]
-      currentAddressw <= 32'h0; // @[CGRA.scala 86:32]
-    end else if (2'h0 == statew) begin // @[CGRA.scala 100:18]
-      if (io_axilite_s_awaddr_valid & io_axilite_s_awaddr_ready) begin // @[CGRA.scala 102:66]
-        currentAddressw <= {{2'd0}, _currentAddressw_T_1[31:2]}; // @[CGRA.scala 103:24]
+    if (reset) begin // @[CGRA.scala 91:32]
+      currentAddressr <= 32'h0; // @[CGRA.scala 91:32]
+    end else if (2'h0 == stater) begin // @[CGRA.scala 131:18]
+      if (io_axilite_s_araddr_valid & io_axilite_s_araddr_ready) begin // @[CGRA.scala 133:66]
+        currentAddressr <= {{2'd0}, _currentAddressr_T_1[31:2]}; // @[CGRA.scala 134:24]
+      end
+    end
+    if (reset) begin // @[CGRA.scala 92:32]
+      currentAddressw <= 32'h0; // @[CGRA.scala 92:32]
+    end else if (2'h0 == statew) begin // @[CGRA.scala 106:18]
+      if (io_axilite_s_awaddr_valid & io_axilite_s_awaddr_ready) begin // @[CGRA.scala 108:66]
+        currentAddressw <= {{2'd0}, _currentAddressw_T_1[31:2]}; // @[CGRA.scala 109:24]
       end
     end
   end
@@ -8190,17 +8266,19 @@ initial begin
   _RAND_4 = {1{`RANDOM}};
   ctrlregs_4 = _RAND_4[31:0];
   _RAND_5 = {1{`RANDOM}};
-  configwaddr = _RAND_5[31:0];
+  ctrlregs_5 = _RAND_5[31:0];
   _RAND_6 = {1{`RANDOM}};
-  configPEcnt = _RAND_6[31:0];
+  configwaddr = _RAND_6[31:0];
   _RAND_7 = {1{`RANDOM}};
-  statew = _RAND_7[1:0];
+  configPEcnt = _RAND_7[31:0];
   _RAND_8 = {1{`RANDOM}};
-  stater = _RAND_8[1:0];
+  statew = _RAND_8[1:0];
   _RAND_9 = {1{`RANDOM}};
-  currentAddressr = _RAND_9[31:0];
+  stater = _RAND_9[1:0];
   _RAND_10 = {1{`RANDOM}};
-  currentAddressw = _RAND_10[31:0];
+  currentAddressr = _RAND_10[31:0];
+  _RAND_11 = {1{`RANDOM}};
+  currentAddressw = _RAND_11[31:0];
 `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial

@@ -56,6 +56,13 @@ void axistream_in(VCGRA* cgra,VerilatedVcdC* tfp,int* data,int size){
 					cgra->io_axistream_s_last = 0;
 				}
 }
+void axistream_out(VCGRA* cgra,VerilatedVcdC* tfp,int size){
+				for(int i =0 ;i<size;i++){
+					cgra->io_axistream_m_ready = 1;
+					CYCLEADD(1)
+					cgra->io_axistream_m_ready = 0;
+				}
+}
 int main(int argc, char** argv) {
     Verilated::commandArgs(argc, argv);
 
@@ -89,30 +96,20 @@ int main(int argc, char** argv) {
 			writereg(cgra,tfp,2<<2,i);//memnum
 			writereg(cgra,tfp,3<<2,0);//startaddr
 			writereg(cgra,tfp,4<<2,0);//addaddr
-			axistream_in(cgra,tfp,datas,400);
+			axistream_in(cgra,tfp,datas+i,400);
 		}
-		/*
 
-    // Reset inputs
-    cgra->clk = 0;
-    cgra->reset = 0;
-    cgra->data = 0;
-    cgra->eval();
-    tfp->dump(0);
+		//read data
+		for(int i = 0;i<4;i++){
+		writereg(cgra,tfp,2<<2,i);
+		writereg(cgra,tfp,3<<2,0);
+		writereg(cgra,tfp,4<<2,0);
+		writereg(cgra,tfp,5<<2,400);
+		writereg(cgra,tfp,0,4);
+		axistream_out(cgra,tfp,400);
+		}
 
-    // Run simulation for several clock cycles
-    for (int i = 1; i < 9; ++i) {
-        // Toggle clock
-        cgra->clk = !cgra->clk;
-
-				cgra->data = 1;
-        // Evaluate model
-        cgra->eval();
-        tfp->dump(i);
-
-    }
-		*/
-
+		CYCLEADD(5)
     // Close waveform file
     tfp->close();
 
