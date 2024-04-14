@@ -2,6 +2,7 @@
 #include "VCGRA.h"
 #include "verilated_vcd_c.h"
 #include <iostream>
+#include <fstream>
 
 
 int cycle = 0;
@@ -82,22 +83,49 @@ int main(int argc, char** argv) {
 		readreg(cgra,tfp,4);
 
 		//config CGRA
-#define SIZE 1000
-		int datas[SIZE] = {};
-		for(int i = 0; i<SIZE;i++){
-			datas[i] = i;
+		std::string filename = "/home/zc/HI-CGRA-Flow/HI-CGRA-Sim/bitstream_harware.bin";
+    // 打开文件
+    std::ifstream file(filename, std::ios::binary|std::ios::ate);
+    // 检查文件是否成功打开
+    if (!file.is_open()) {
+        std::cerr << "无法打开文件 " << filename << std::endl;
+        return 1;
+    }
+    // 定位到文件末尾以获取大小
+    file.seekg(0, std::ios::end);
+    std::streampos fileSize = file.tellg();
+
+		file.seekg(0,std::ios::beg);
+
+		char * bitstream = new char[fileSize];
+		if(!file.read(bitstream,fileSize)){
+			std::cerr << "读取文件内容错误" << std::endl;
 		}
-		axistream_in(cgra,tfp,datas,SIZE);
+    file.close();
+    // 打印文件大小
+    std::cout << "文件 " << filename << " 的大小为 " << fileSize << " 字节" << std::endl;
+		axistream_in(cgra,tfp,(int*)bitstream,fileSize/4);
 		CYCLEADD(1)
 #undef SIZE
 		//load data
+		int data1[20] ={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+		int data2[20] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+		int data3[20] ={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+		int data4[20] = {0};
+		int* datas[4]; datas[0] = data1; datas[1] = data2; datas[2] = data3; datas[3] = data4;
 		writereg(cgra,tfp,0,2);
 		for(int i = 0;i<4;i++){
 			writereg(cgra,tfp,2<<2,i);//memnum
 			writereg(cgra,tfp,3<<2,0);//startaddr
 			writereg(cgra,tfp,4<<2,0);//addaddr
-			axistream_in(cgra,tfp,datas+i,400);
+			axistream_in(cgra,tfp,datas[i],20);
 		}
+
+		//exe
+		writereg(cgra,tfp,0,3);
+		CYCLEADD(600)
+
+
 
 		//read data
 		for(int i = 0;i<4;i++){

@@ -27,6 +27,150 @@ set cgraregs [list CGRA.clock \
 	CGRA.ctrlregs_4\
 	CGRA.ctrlregs_5\
 	]
+set PE0Decode [list \
+	CGRA.PE.Decoder.io_inst_0\
+	CGRA.PE.Decoder.io_alukey\
+	CGRA.PE.Decoder.io_srckey_0\
+	CGRA.PE.Decoder.io_srckey_1\
+	CGRA.PE.Decoder.io_linkkey_0\
+	CGRA.PE.Decoder.io_linkkey_1\
+	CGRA.PE.Decoder.io_linkkey_2\
+	CGRA.PE.Decoder.io_linkkey_3\
+	CGRA.PE.Decoder.io_canexe\
+				]
+set PE0Fu [list \
+	CGRA.PE.Alu.io_src1\
+	CGRA.PE.Alu.io_src2\
+	CGRA.PE.Alu.io_result_bits
+				]
+set PE1Decode [list \
+	CGRA.PE_1.Decoder.io_inst_0\
+	CGRA.PE_1.Decoder.io_alukey\
+	CGRA.PE_1.Decoder.io_srckey_0\
+	CGRA.PE_1.Decoder.io_srckey_1\
+	CGRA.PE_1.Decoder.io_linkkey_0\
+	CGRA.PE_1.Decoder.io_linkkey_1\
+	CGRA.PE_1.Decoder.io_linkkey_2\
+	CGRA.PE_1.Decoder.io_linkkey_3\
+	CGRA.PE_1.Decoder.io_canexe\
+				]
+set PE1Fu [list \
+	CGRA.PE_1.Alu.io_src1\
+	CGRA.PE_1.Alu.io_src2\
+	CGRA.PE_1.Alu.io_result_bits
+				]
+set PE3Decode [list \
+	CGRA.PE_3.Decoder.io_inst_0\
+	CGRA.PE_3.Decoder.io_alukey\
+	CGRA.PE_3.Decoder.io_srckey_0\
+	CGRA.PE_3.Decoder.io_srckey_1\
+	CGRA.PE_3.Decoder.io_linkkey_0\
+	CGRA.PE_3.Decoder.io_linkkey_1\
+	CGRA.PE_3.Decoder.io_linkkey_2\
+	CGRA.PE_3.Decoder.io_linkkey_3\
+	CGRA.PE_3.Decoder.io_canexe\
+				]
+set PE3Fu [list \
+	CGRA.PE_3.Alu.io_src1\
+	CGRA.PE_3.Alu.io_src2\
+	CGRA.PE_3.Alu.io_result_bits
+				]
+set PE15Decode [list \
+	CGRA.PE_15.Decoder.io_inst_0\
+	CGRA.PE_15.Decoder.io_alukey\
+	CGRA.PE_15.Decoder.io_srckey_0\
+	CGRA.PE_15.Decoder.io_srckey_1\
+	CGRA.PE_15.Decoder.io_linkkey_0\
+	CGRA.PE_15.Decoder.io_linkkey_1\
+	CGRA.PE_15.Decoder.io_linkkey_2\
+	CGRA.PE_15.Decoder.io_linkkey_3\
+	CGRA.PE_15.Decoder.io_canexe\
+				]
+set PE15Fu [list \
+	CGRA.PE_15.Alu.io_src1\
+	CGRA.PE_15.Alu.io_src2\
+	CGRA.PE_15.Alu.io_result_bits
+				]
+set PE14Decode [list \
+	CGRA.PE_14.Decoder.io_inst_0\
+	CGRA.PE_14.Decoder.io_alukey\
+	CGRA.PE_14.Decoder.io_srckey_0\
+	CGRA.PE_14.Decoder.io_srckey_1\
+	CGRA.PE_14.Decoder.io_linkkey_0\
+	CGRA.PE_14.Decoder.io_linkkey_1\
+	CGRA.PE_14.Decoder.io_linkkey_2\
+	CGRA.PE_14.Decoder.io_linkkey_3\
+	CGRA.PE_14.Decoder.io_canexe\
+				]
+set PE14Fu [list \
+	CGRA.PE_14.Alu.io_src1\
+	CGRA.PE_14.Alu.io_src2\
+	CGRA.PE_14.Alu.io_result_bits
+				]
+set PE13Decode [list \
+	CGRA.PE_13.Decoder.io_inst_0\
+	CGRA.PE_13.Decoder.io_alukey\
+	CGRA.PE_13.Decoder.io_srckey_0\
+	CGRA.PE_13.Decoder.io_srckey_1\
+	CGRA.PE_13.Decoder.io_linkkey_0\
+	CGRA.PE_13.Decoder.io_linkkey_1\
+	CGRA.PE_13.Decoder.io_linkkey_2\
+	CGRA.PE_13.Decoder.io_linkkey_3\
+	CGRA.PE_13.Decoder.io_canexe\
+				]
+set PE13Fu [list \
+	CGRA.PE_13.Alu.io_src1\
+	CGRA.PE_13.Alu.io_src2\
+	CGRA.PE_13.Alu.io_result_bits
+				]
+set PE12Decode [list \
+	CGRA.PE_12.Decoder.io_inst_0\
+	CGRA.PE_12.Decoder.io_alukey\
+	CGRA.PE_12.Decoder.io_srckey_0\
+	CGRA.PE_12.Decoder.io_srckey_1\
+	CGRA.PE_12.Decoder.io_linkkey_0\
+	CGRA.PE_12.Decoder.io_linkkey_1\
+	CGRA.PE_12.Decoder.io_linkkey_2\
+	CGRA.PE_12.Decoder.io_linkkey_3\
+	CGRA.PE_12.Decoder.io_canexe\
+				]
+set PE12Fu [list \
+	CGRA.PE_12.Alu.io_src1\
+	CGRA.PE_12.Alu.io_src2\
+	CGRA.PE_12.Alu.io_result_bits
+				]
+set PE8Decode [list \
+	CGRA.PE_8.Decoder.io_inst_0\
+	CGRA.PE_8.Decoder.io_alukey\
+	CGRA.PE_8.Decoder.io_srckey_0\
+	CGRA.PE_8.Decoder.io_srckey_1\
+	CGRA.PE_8.Decoder.io_linkkey_0\
+	CGRA.PE_8.Decoder.io_linkkey_1\
+	CGRA.PE_8.Decoder.io_linkkey_2\
+	CGRA.PE_8.Decoder.io_linkkey_3\
+	CGRA.PE_8.Decoder.io_canexe\
+				]
+set PE8Fu [list \
+	CGRA.PE_8.Alu.io_src1\
+	CGRA.PE_8.Alu.io_src2\
+	CGRA.PE_8.Alu.io_result_bits
+				]
+set PE4Decode [list \
+	CGRA.PE_4.Decoder.io_inst_0\
+	CGRA.PE_4.Decoder.io_alukey\
+	CGRA.PE_4.Decoder.io_srckey_0\
+	CGRA.PE_4.Decoder.io_srckey_1\
+	CGRA.PE_4.Decoder.io_linkkey_0\
+	CGRA.PE_4.Decoder.io_linkkey_1\
+	CGRA.PE_4.Decoder.io_linkkey_2\
+	CGRA.PE_4.Decoder.io_linkkey_3\
+	CGRA.PE_4.Decoder.io_canexe\
+				]
+set PE4Fu [list \
+	CGRA.PE_4.Alu.io_src1\
+	CGRA.PE_4.Alu.io_src2\
+	CGRA.PE_4.Alu.io_result_bits
+				]
 gtkwave::addSignalsFromList $cgraregs
 gtkwave::addSignalsFromList $axilites
 gtkwave::addSignalsFromList $axistreams
