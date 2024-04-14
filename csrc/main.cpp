@@ -78,9 +78,7 @@ int main(int argc, char** argv) {
 
 		reset(cgra,tfp);
 		writereg(cgra,tfp,0,1);
-		writereg(cgra,tfp,4,1235);
 		readreg(cgra,tfp,0);
-		readreg(cgra,tfp,4);
 
 		//config CGRA
 		std::string filename = "/home/zc/HI-CGRA-Flow/HI-CGRA-Sim/bitstream_harware.bin";
