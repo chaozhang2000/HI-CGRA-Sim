@@ -24,8 +24,7 @@ CINCS = $(shell find $(abspath ./cinc) -name "*.h")
 #rules for verilator
 C_INCFLAGS = $(addprefix -I, $(C_INC_PATH))
 CFLAGS += $(C_INCFLAGS) -fPIE -std=c++14 -DTOP_NAME="\"V$(TOPNAME)\""
-CFLAGS += $(shell llvm-config-12 --cxxflags)
-LDFLAGS += -lreadline -ldl -lSDL2 -lSDL2_image $(shell llvm-config-12 --libs) 
+LDFLAGS += 
 BIN_NAME ?= ./prog/dummy-riscv64-npc.bin
 LOG ?= $(BUILD_DIR)/npc-log.txt
 ELF ?=./prog/dummy-riscv64-npc.elf
