@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
     std::cout << "文件 " << filename << " 的大小为 " << fileSize << " 字节" << std::endl;
 		axistream_in(cgra,tfp,(int*)bitstream,fileSize/4);
 		CYCLEADD(1)
-#undef SIZE
+
 		//load data
 		int data1[20] ={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
 		int data2[20] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
