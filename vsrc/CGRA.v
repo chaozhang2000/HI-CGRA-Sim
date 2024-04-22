@@ -13346,7 +13346,7 @@ module CGRA(
   wire [7:0] _mask_T_8 = io_axilite_s_wstrb[1] ? 8'hff : 8'h0; // @[Bitwise.scala 77:12]
   wire [7:0] _mask_T_11 = io_axilite_s_wstrb[0] ? 8'hff : 8'h0; // @[Bitwise.scala 77:12]
   wire [31:0] mask = {_mask_T_2,_mask_T_5,_mask_T_8,_mask_T_11}; // @[Cat.scala 33:92]
-  wire [31:0] _currentAddressw_T_1 = io_axilite_s_awaddr_bits - 32'h0; // @[CGRA.scala 142:52]
+  wire [31:0] _currentAddressw_T_1 = io_axilite_s_awaddr_bits - 32'ha0010000; // @[CGRA.scala 142:52]
   wire  _T_143 = io_axilite_s_wdata_valid & io_axilite_s_wdata_ready; // @[CGRA.scala 147:36]
   wire [31:0] _ctrlregs_axil_wdata_T_1 = ~mask; // @[CGRA.scala 149:61]
   wire [31:0] _GEN_3 = 3'h1 == currentAddressw[2:0] ? ctrlregs_1 : ctrlregs_0; // @[CGRA.scala 149:{58,58}]
@@ -13364,7 +13364,7 @@ module CGRA(
   wire  ctrlregs_axil_wen = 2'h0 == statew ? 1'h0 : 2'h1 == statew & _T_143; // @[CGRA.scala 139:18 129:20]
   wire [31:0] ctrlregs_axil_wdata = 2'h0 == statew ? 32'h0 : _GEN_18; // @[CGRA.scala 139:18 130:23]
   wire  _io_axilite_s_rdata_valid_T = stater == 2'h1; // @[CGRA.scala 163:37]
-  wire [31:0] _currentAddressr_T_1 = io_axilite_s_araddr_bits - 32'h0; // @[CGRA.scala 167:52]
+  wire [31:0] _currentAddressr_T_1 = io_axilite_s_araddr_bits - 32'ha0010000; // @[CGRA.scala 167:52]
   wire [31:0] _GEN_35 = 3'h1 == currentAddressr[2:0] ? ctrlregs_1 : ctrlregs_0; // @[CGRA.scala 177:{33,33}]
   wire [31:0] _GEN_36 = 3'h2 == currentAddressr[2:0] ? ctrlregs_2 : _GEN_35; // @[CGRA.scala 177:{33,33}]
   wire [31:0] _GEN_37 = 3'h3 == currentAddressr[2:0] ? ctrlregs_3 : _GEN_36; // @[CGRA.scala 177:{33,33}]
@@ -14254,13 +14254,13 @@ module CGRA(
     .io_memoptvalid(Datamem_3_io_memoptvalid)
   );
   assign io_finish = ctrlregs_1[0]; // @[CGRA.scala 119:14]
-  assign io_axilite_s_araddr_ready = stater == 2'h0; // @[CGRA.scala 162:39]
+  assign io_axilite_s_araddr_ready = stater == 2'h0; // @[CGRA.scala 162:40]
   assign io_axilite_s_rdata_valid = stater == 2'h1; // @[CGRA.scala 163:37]
   assign io_axilite_s_rdata_bits = _io_axilite_s_rdata_valid_T & io_axilite_s_rdata_valid & io_axilite_s_rdata_ready ?
     _GEN_39 : 32'h0; // @[CGRA.scala 177:33]
   assign io_axilite_s_rresp = 2'h0; // @[CGRA.scala 179:22]
-  assign io_axilite_s_awaddr_ready = statew == 2'h0; // @[CGRA.scala 135:39]
-  assign io_axilite_s_wdata_ready = statew == 2'h1; // @[CGRA.scala 136:38]
+  assign io_axilite_s_awaddr_ready = statew == 2'h0; // @[CGRA.scala 135:40]
+  assign io_axilite_s_wdata_ready = statew == 2'h1; // @[CGRA.scala 136:39]
   assign io_axilite_s_bresp_valid = 2'h0 == statew ? 1'h0 : _GEN_20; // @[CGRA.scala 139:18 132:28]
   assign io_axilite_s_bresp_bits = 2'h0;
   assign io_axistream_s_ready = 32'h1 == ctrlregs_0 | 32'h2 == ctrlregs_0; // @[CGRA.scala 197:71]

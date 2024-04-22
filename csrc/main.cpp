@@ -5,6 +5,7 @@
 #include <fstream>
 
 
+#define BASEADDR 0xA0010000
 int cycle = 0;
 void reset(VCGRA* cgra,VerilatedVcdC* tfp){
 	cgra->clock = 0;
@@ -24,7 +25,7 @@ void reset(VCGRA* cgra,VerilatedVcdC* tfp){
 				cgra->clock = 1;\
 				cgra->eval();}}
 void writereg(VCGRA* cgra,VerilatedVcdC* tfp,int addr,int data){
-				cgra->io_axilite_s_awaddr_bits = addr;
+				cgra->io_axilite_s_awaddr_bits = addr + BASEADDR;
 				cgra->io_axilite_s_awaddr_valid = 1;
 				cgra->io_axilite_s_wdata_bits = data;
 				cgra->io_axilite_s_wdata_valid = 1;
@@ -38,7 +39,7 @@ void writereg(VCGRA* cgra,VerilatedVcdC* tfp,int addr,int data){
 				cgra->io_axilite_s_bresp_ready = 0;
 }
 void readreg(VCGRA* cgra,VerilatedVcdC* tfp,int addr){
-				cgra->io_axilite_s_araddr_bits = addr;
+				cgra->io_axilite_s_araddr_bits = addr + BASEADDR;
 				cgra->io_axilite_s_araddr_valid = 1;
 				cgra->io_axilite_s_rdata_ready = 1;
 				CYCLEADD(1)
