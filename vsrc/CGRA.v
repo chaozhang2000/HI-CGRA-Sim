@@ -730,7 +730,7 @@ module PEDecode(
   input  [31:0] io_iinum,
   input  [31:0] io_startcyclecnt,
   input  [31:0] io_startcyclenum,
-  output [2:0]  io_alukey,
+  output [3:0]  io_alukey,
   output [3:0]  io_srckey_0,
   output [3:0]  io_srckey_1,
   output [2:0]  io_linkkey_0,
@@ -759,7 +759,7 @@ module PEDecode(
   wire [31:0] _io_linkinstskip_1_T_2 = io_iinum + io_inst_3; // @[PEDecode.scala 45:124]
   wire [31:0] _io_linkinstskip_2_T_2 = io_iinum + io_inst_4; // @[PEDecode.scala 45:124]
   wire [31:0] _io_linkinstskip_3_T_2 = io_iinum + io_inst_5; // @[PEDecode.scala 45:124]
-  assign io_alukey = io_inst_0[4:2]; // @[PEDecode.scala 27:37]
+  assign io_alukey = io_inst_0[5:2]; // @[PEDecode.scala 27:37]
   assign io_srckey_0 = io_inst_0[13:10]; // @[PEDecode.scala 28:40]
   assign io_srckey_1 = io_inst_0[18:15]; // @[PEDecode.scala 29:40]
   assign io_linkkey_0 = io_inst_0[22:20]; // @[PEDecode.scala 32:40]
@@ -904,21 +904,36 @@ module Muxonehot(
   input  [31:0] io_in_3,
   input  [31:0] io_in_4,
   input  [31:0] io_in_5,
+  input  [31:0] io_in_7,
+  input  [31:0] io_in_8,
+  input  [31:0] io_in_9,
+  input  [31:0] io_in_10,
+  input  [31:0] io_in_11,
   input         io_sel_1,
   input         io_sel_2,
   input         io_sel_3,
   input         io_sel_4,
   input         io_sel_5,
+  input         io_sel_6,
+  input         io_sel_7,
+  input         io_sel_8,
+  input         io_sel_9,
+  input         io_sel_10,
   output [31:0] io_out
 );
-  wire [31:0] _io_out_T_7 = io_sel_5 ? io_in_5 : 32'h0; // @[Mux.scala 47:70]
-  wire [31:0] _io_out_T_8 = io_sel_4 ? io_in_4 : _io_out_T_7; // @[Mux.scala 47:70]
-  wire [31:0] _io_out_T_9 = io_sel_3 ? io_in_3 : _io_out_T_8; // @[Mux.scala 47:70]
-  wire [31:0] _io_out_T_10 = io_sel_2 ? io_in_2 : _io_out_T_9; // @[Mux.scala 47:70]
-  assign io_out = io_sel_1 ? io_in_1 : _io_out_T_10; // @[Mux.scala 47:70]
+  wire [31:0] _io_out_T_12 = io_sel_10 ? io_in_10 : io_in_11; // @[Mux.scala 47:70]
+  wire [31:0] _io_out_T_13 = io_sel_9 ? io_in_9 : _io_out_T_12; // @[Mux.scala 47:70]
+  wire [31:0] _io_out_T_14 = io_sel_8 ? io_in_8 : _io_out_T_13; // @[Mux.scala 47:70]
+  wire [31:0] _io_out_T_15 = io_sel_7 ? io_in_7 : _io_out_T_14; // @[Mux.scala 47:70]
+  wire [31:0] _io_out_T_16 = io_sel_6 ? 32'h0 : _io_out_T_15; // @[Mux.scala 47:70]
+  wire [31:0] _io_out_T_17 = io_sel_5 ? io_in_5 : _io_out_T_16; // @[Mux.scala 47:70]
+  wire [31:0] _io_out_T_18 = io_sel_4 ? io_in_4 : _io_out_T_17; // @[Mux.scala 47:70]
+  wire [31:0] _io_out_T_19 = io_sel_3 ? io_in_3 : _io_out_T_18; // @[Mux.scala 47:70]
+  wire [31:0] _io_out_T_20 = io_sel_2 ? io_in_2 : _io_out_T_19; // @[Mux.scala 47:70]
+  assign io_out = io_sel_1 ? io_in_1 : _io_out_T_20; // @[Mux.scala 47:70]
 endmodule
 module Fu(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -932,61 +947,101 @@ module Fu(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h0; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'h0; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h0; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h0; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h0; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module Crossbar(
   input  [31:0] io_in_1,
@@ -1158,7 +1213,7 @@ module PE(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -1224,7 +1279,7 @@ module PE(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -1271,16 +1326,19 @@ module PE(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -1662,7 +1720,7 @@ module PE(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_1(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -1676,61 +1734,101 @@ module Fu_1(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h1; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'h1; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h1; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h1; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h1; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_1(
   input         clock,
@@ -1864,7 +1962,7 @@ module PE_1(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -1930,7 +2028,7 @@ module PE_1(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -1977,16 +2075,19 @@ module PE_1(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -2370,7 +2471,7 @@ module PE_1(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_2(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -2384,61 +2485,101 @@ module Fu_2(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h2; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'h2; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h2; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h2; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h2; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_2(
   input         clock,
@@ -2572,7 +2713,7 @@ module PE_2(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -2638,7 +2779,7 @@ module PE_2(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -2685,16 +2826,19 @@ module PE_2(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -3078,7 +3222,7 @@ module PE_2(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_3(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -3092,61 +3236,101 @@ module Fu_3(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h3; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'h3; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h3; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h3; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h3; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_3(
   input         clock,
@@ -3277,7 +3461,7 @@ module PE_3(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -3343,7 +3527,7 @@ module PE_3(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -3390,16 +3574,19 @@ module PE_3(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -3781,7 +3968,7 @@ module PE_3(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_4(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -3795,61 +3982,101 @@ module Fu_4(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h4; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'h4; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h4; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h4; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h4; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_4(
   input         clock,
@@ -3983,7 +4210,7 @@ module PE_4(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -4049,7 +4276,7 @@ module PE_4(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -4096,16 +4323,19 @@ module PE_4(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -4489,7 +4719,7 @@ module PE_4(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_5(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -4503,61 +4733,101 @@ module Fu_5(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h5; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'h5; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h5; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h5; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h5; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_5(
   input         clock,
@@ -4694,7 +4964,7 @@ module PE_5(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -4760,7 +5030,7 @@ module PE_5(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -4807,16 +5077,19 @@ module PE_5(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -5202,7 +5475,7 @@ module PE_5(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_6(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -5216,61 +5489,101 @@ module Fu_6(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h6; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'h6; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h6; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h6; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h6; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_6(
   input         clock,
@@ -5407,7 +5720,7 @@ module PE_6(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -5473,7 +5786,7 @@ module PE_6(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -5520,16 +5833,19 @@ module PE_6(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -5915,7 +6231,7 @@ module PE_6(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_7(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -5929,61 +6245,101 @@ module Fu_7(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h7; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'h7; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h7; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h7; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h7; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_7(
   input         clock,
@@ -6117,7 +6473,7 @@ module PE_7(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -6183,7 +6539,7 @@ module PE_7(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -6230,16 +6586,19 @@ module PE_7(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -6623,7 +6982,7 @@ module PE_7(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_8(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -6637,61 +6996,101 @@ module Fu_8(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h8; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'h8; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h8; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h8; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h8; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_8(
   input         clock,
@@ -6825,7 +7224,7 @@ module PE_8(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -6891,7 +7290,7 @@ module PE_8(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -6938,16 +7337,19 @@ module PE_8(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -7331,7 +7733,7 @@ module PE_8(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_9(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -7345,61 +7747,101 @@ module Fu_9(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h9; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'h9; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h9; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h9; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'h9; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_9(
   input         clock,
@@ -7536,7 +7978,7 @@ module PE_9(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -7602,7 +8044,7 @@ module PE_9(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -7649,16 +8091,19 @@ module PE_9(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -8044,7 +8489,7 @@ module PE_9(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_10(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -8058,61 +8503,101 @@ module Fu_10(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'ha; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'ha; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'ha; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'ha; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'ha; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_10(
   input         clock,
@@ -8249,7 +8734,7 @@ module PE_10(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -8315,7 +8800,7 @@ module PE_10(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -8362,16 +8847,19 @@ module PE_10(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -8757,7 +9245,7 @@ module PE_10(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_11(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -8771,61 +9259,101 @@ module Fu_11(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hb; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'hb; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hb; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hb; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hb; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_11(
   input         clock,
@@ -8959,7 +9487,7 @@ module PE_11(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -9025,7 +9553,7 @@ module PE_11(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -9072,16 +9600,19 @@ module PE_11(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -9465,7 +9996,7 @@ module PE_11(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_12(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -9479,61 +10010,101 @@ module Fu_12(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hc; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'hc; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hc; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hc; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hc; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_12(
   input         clock,
@@ -9664,7 +10235,7 @@ module PE_12(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -9730,7 +10301,7 @@ module PE_12(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -9777,16 +10348,19 @@ module PE_12(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -10168,7 +10742,7 @@ module PE_12(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_13(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -10182,61 +10756,101 @@ module Fu_13(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hd; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'hd; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hd; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hd; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hd; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_13(
   input         clock,
@@ -10370,7 +10984,7 @@ module PE_13(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -10436,7 +11050,7 @@ module PE_13(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -10483,16 +11097,19 @@ module PE_13(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -10876,7 +11493,7 @@ module PE_13(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_14(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -10890,61 +11507,101 @@ module Fu_14(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'he; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'he; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'he; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'he; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'he; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_14(
   input         clock,
@@ -11078,7 +11735,7 @@ module PE_14(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -11144,7 +11801,7 @@ module PE_14(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -11191,16 +11848,19 @@ module PE_14(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
@@ -11584,7 +12244,7 @@ module PE_14(
   assign Crossbar_io_select_3 = Decoder_io_linkkey_3; // @[PE.scala 148:22]
 endmodule
 module Fu_15(
-  input  [2:0]  io_fn,
+  input  [3:0]  io_fn,
   input  [31:0] io_src1,
   input  [31:0] io_src2,
   output        io_result_valid,
@@ -11598,61 +12258,101 @@ module Fu_15(
   input  [3:0]  io_datamemio_peidfm,
   input         io_datamemio_memoptvalid
 );
-  wire [31:0] outmux_io_in_1; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_2; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_3; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_4; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_in_5; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_1; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_2; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_3; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_4; // @[Fu.scala 53:22]
-  wire  outmux_io_sel_5; // @[Fu.scala 53:22]
-  wire [31:0] outmux_io_out; // @[Fu.scala 53:22]
-  wire [31:0] src1 = io_src1; // @[Fu.scala 46:22]
-  wire [31:0] src2 = io_src2; // @[Fu.scala 47:22]
-  wire  result_valid_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 68:41]
-  wire  result_valid_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 68:41]
-  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 67:52 68:23 50:46]
-  wire  result_valid_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  wire  result_valid_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 83:35]
-  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 83:49]
-  wire [62:0] _GEN_7 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 82:41 83:26 50:46]
-  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hf; // @[Fu.scala 94:60]
-  Muxonehot outmux ( // @[Fu.scala 53:22]
+  wire [31:0] outmux_io_in_1; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_2; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_3; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_4; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_5; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_7; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_8; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_9; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_in_11; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_1; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_2; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_3; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_4; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_5; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_6; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_7; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_8; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_9; // @[Fu.scala 66:22]
+  wire  outmux_io_sel_10; // @[Fu.scala 66:22]
+  wire [31:0] outmux_io_out; // @[Fu.scala 66:22]
+  wire [31:0] src1 = io_src1; // @[Fu.scala 59:22]
+  wire [31:0] src2 = io_src2; // @[Fu.scala 60:22]
+  wire  result_valid_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  wire [31:0] _result_1_T_3 = $signed(io_src1) + $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  wire [63:0] _result_2_T_1 = $signed(io_src1) * $signed(io_src2); // @[Fu.scala 81:41]
+  wire [63:0] _GEN_2 = result_valid_2 ? _result_2_T_1 : 64'h0; // @[Fu.scala 80:52 81:23 63:46]
+  wire  result_valid_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  wire  result_valid_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  wire [31:0] _result_7_T_2 = $signed(io_src1) | $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  wire  result_valid_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  wire [31:0] _result_9_T_3 = $signed(io_src1) - $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
+  wire [31:0] _result_10_T_2 = $signed(io_src1) & $signed(io_src2); // @[Fu.scala 81:41]
+  wire  result_valid_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  wire [62:0] _GEN_0 = {{31{src1[31]}},src1}; // @[Fu.scala 96:35]
+  wire [62:0] _result_4_T_2 = $signed(_GEN_0) << src2[4:0]; // @[Fu.scala 96:49]
+  wire [62:0] _GEN_15 = result_valid_4 ? _result_4_T_2 : 63'h0; // @[Fu.scala 95:41 96:26 63:46]
+  wire  result_valid_11 = io_fn == 4'hb; // @[Fu.scala 102:14]
+  wire [31:0] _result_11_T_2 = $signed(io_src1) >>> src2[4:0]; // @[Fu.scala 103:59]
+  wire  _result_valid_5_T = io_datamemio_peidfm == 4'hf; // @[Fu.scala 114:84]
+  wire  result_valid_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hf; // @[Fu.scala 114:60]
+  Muxonehot outmux ( // @[Fu.scala 66:22]
     .io_in_1(outmux_io_in_1),
     .io_in_2(outmux_io_in_2),
     .io_in_3(outmux_io_in_3),
     .io_in_4(outmux_io_in_4),
     .io_in_5(outmux_io_in_5),
+    .io_in_7(outmux_io_in_7),
+    .io_in_8(outmux_io_in_8),
+    .io_in_9(outmux_io_in_9),
+    .io_in_10(outmux_io_in_10),
+    .io_in_11(outmux_io_in_11),
     .io_sel_1(outmux_io_sel_1),
     .io_sel_2(outmux_io_sel_2),
     .io_sel_3(outmux_io_sel_3),
     .io_sel_4(outmux_io_sel_4),
     .io_sel_5(outmux_io_sel_5),
+    .io_sel_6(outmux_io_sel_6),
+    .io_sel_7(outmux_io_sel_7),
+    .io_sel_8(outmux_io_sel_8),
+    .io_sel_9(outmux_io_sel_9),
+    .io_sel_10(outmux_io_sel_10),
     .io_out(outmux_io_out)
   );
   assign io_result_valid = result_valid_1 | result_valid_2 | result_valid_3 | result_valid_4 | result_valid_5 |
-    result_valid_5; // @[Fu.scala 108:43]
-  assign io_result_bits = outmux_io_out; // @[Fu.scala 107:18]
-  assign io_datamemio_wen = io_fn == 3'h5; // @[Fu.scala 98:14]
-  assign io_datamemio_waddr = io_fn == 3'h5 ? io_src2 : 32'h0; // @[Fu.scala 41:21 98:43 99:25]
-  assign io_datamemio_wdata = io_fn == 3'h5 ? io_src1 : 32'h0; // @[Fu.scala 100:25 42:21 98:43]
-  assign io_datamemio_ren = io_fn == 3'h4; // @[Fu.scala 89:14]
-  assign io_datamemio_raddr = io_fn == 3'h4 ? io_src1 : 32'h0; // @[Fu.scala 40:21 89:42 90:25]
-  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 67:52 68:23 50:46]
-  assign outmux_io_in_4 = _GEN_7[31:0]; // @[Fu.scala 48:19]
-  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 48:19 93:27]
-  assign outmux_io_sel_1 = io_fn == 3'h2; // @[Fu.scala 67:14]
-  assign outmux_io_sel_2 = io_fn == 3'h1; // @[Fu.scala 67:14]
-  assign outmux_io_sel_3 = io_fn == 3'h3; // @[Fu.scala 67:14]
-  assign outmux_io_sel_4 = io_fn == 3'h6; // @[Fu.scala 82:14]
-  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hf; // @[Fu.scala 94:60]
+    result_valid_5 | result_valid_7 | result_valid_8 | result_valid_9 | result_valid_10 | result_valid_11; // @[Fu.scala 128:43]
+  assign io_result_bits = outmux_io_out; // @[Fu.scala 127:18]
+  assign io_datamemio_wen = io_fn == 4'h5; // @[Fu.scala 118:14]
+  assign io_datamemio_waddr = io_fn == 4'h5 ? io_src2 : 32'h0; // @[Fu.scala 118:43 119:25 54:21]
+  assign io_datamemio_wdata = io_fn == 4'h5 ? io_src1 : 32'h0; // @[Fu.scala 118:43 120:25 55:21]
+  assign io_datamemio_ren = io_fn == 4'h4; // @[Fu.scala 109:14]
+  assign io_datamemio_raddr = io_fn == 4'h4 ? io_src1 : 32'h0; // @[Fu.scala 109:42 110:25 53:21]
+  assign outmux_io_in_1 = result_valid_1 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_2 = _GEN_2[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_3 = result_valid_3 ? _result_1_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_4 = _GEN_15[31:0]; // @[Fu.scala 61:19]
+  assign outmux_io_in_5 = io_datamemio_rdata; // @[Fu.scala 61:19 113:27]
+  assign outmux_io_in_7 = result_valid_7 ? _result_7_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_8 = result_valid_8 ? io_src1 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_9 = result_valid_9 ? _result_9_T_3 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_10 = result_valid_10 ? _result_10_T_2 : 32'h0; // @[Fu.scala 80:52 81:23 63:46]
+  assign outmux_io_in_11 = result_valid_11 ? _result_11_T_2 : 32'h0; // @[Fu.scala 102:42 103:27 63:46]
+  assign outmux_io_sel_1 = io_fn == 4'h2; // @[Fu.scala 80:14]
+  assign outmux_io_sel_2 = io_fn == 4'h1; // @[Fu.scala 80:14]
+  assign outmux_io_sel_3 = io_fn == 4'h3; // @[Fu.scala 80:14]
+  assign outmux_io_sel_4 = io_fn == 4'h6; // @[Fu.scala 95:14]
+  assign outmux_io_sel_5 = io_datamemio_memoptvalid & io_datamemio_peidfm == 4'hf; // @[Fu.scala 114:60]
+  assign outmux_io_sel_6 = io_datamemio_memoptvalid & _result_valid_5_T; // @[Fu.scala 123:61]
+  assign outmux_io_sel_7 = io_fn == 4'h7; // @[Fu.scala 80:14]
+  assign outmux_io_sel_8 = io_fn == 4'h8; // @[Fu.scala 80:14]
+  assign outmux_io_sel_9 = io_fn == 4'ha; // @[Fu.scala 80:14]
+  assign outmux_io_sel_10 = io_fn == 4'h9; // @[Fu.scala 80:14]
 endmodule
 module PE_15(
   input         clock,
@@ -11783,7 +12483,7 @@ module PE_15(
   wire [31:0] Decoder_io_iinum; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclecnt; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_startcyclenum; // @[PE.scala 23:23]
-  wire [2:0] Decoder_io_alukey; // @[PE.scala 23:23]
+  wire [3:0] Decoder_io_alukey; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_0; // @[PE.scala 23:23]
   wire [3:0] Decoder_io_srckey_1; // @[PE.scala 23:23]
   wire [2:0] Decoder_io_linkkey_0; // @[PE.scala 23:23]
@@ -11849,7 +12549,7 @@ module PE_15(
   wire [31:0] Srcmuxs_1_io_in_9; // @[PE.scala 30:48]
   wire [3:0] Srcmuxs_1_io_sel; // @[PE.scala 30:48]
   wire [31:0] Srcmuxs_1_io_out; // @[PE.scala 30:48]
-  wire [2:0] Alu_io_fn; // @[PE.scala 31:19]
+  wire [3:0] Alu_io_fn; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src1; // @[PE.scala 31:19]
   wire [31:0] Alu_io_src2; // @[PE.scala 31:19]
   wire  Alu_io_result_valid; // @[PE.scala 31:19]
@@ -11896,16 +12596,19 @@ module PE_15(
   wire  _T_48 = PEctrlregs_io_outData_20 == PEctrlregs_io_outData_4 & PEctrlregs_io_outData_19 ==
     PEctrlregs_io_outData_3; // @[PE.scala 48:83]
   wire [31:0] _Kinit_T_6 = $signed(PEctrlregs_io_outData_25) + $signed(PEctrlregs_io_outData_14); // @[PE.scala 51:51]
-  wire  Jchange = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(PEctrlregs_io_outData_17)
-     : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  _Kinit_T_16 = $signed(PEctrlregs_io_outData_14) > 32'sh0 ? $signed(_Kinit_T_6) >= $signed(
+    PEctrlregs_io_outData_17) : $signed(_Kinit_T_6) <= $signed(PEctrlregs_io_outData_17); // @[PE.scala 51:8]
+  wire  Jchange = _Kinit_T_16 & _T_42; // @[PE.scala 51:162]
   wire [31:0] _Knew_T_1 = PEctrlregs_io_outData_25 + PEctrlregs_io_outData_14; // @[PE.scala 55:55]
   wire [31:0] _Jinit_T_6 = $signed(PEctrlregs_io_outData_26) + $signed(PEctrlregs_io_outData_13); // @[PE.scala 51:51]
-  wire  Ichange = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(PEctrlregs_io_outData_16)
-     : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  _Jinit_T_16 = $signed(PEctrlregs_io_outData_13) > 32'sh0 ? $signed(_Jinit_T_6) >= $signed(
+    PEctrlregs_io_outData_16) : $signed(_Jinit_T_6) <= $signed(PEctrlregs_io_outData_16); // @[PE.scala 51:8]
+  wire  Ichange = _Jinit_T_16 & Jchange; // @[PE.scala 51:162]
   wire [31:0] _Jnew_T_1 = PEctrlregs_io_outData_26 + PEctrlregs_io_outData_13; // @[PE.scala 59:55]
   wire [31:0] _Iinit_T_6 = $signed(PEctrlregs_io_outData_27) + $signed(PEctrlregs_io_outData_12); // @[PE.scala 51:51]
-  wire  Iinit = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(PEctrlregs_io_outData_15) :
-    $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  _Iinit_T_16 = $signed(PEctrlregs_io_outData_12) > 32'sh0 ? $signed(_Iinit_T_6) >= $signed(
+    PEctrlregs_io_outData_15) : $signed(_Iinit_T_6) <= $signed(PEctrlregs_io_outData_15); // @[PE.scala 51:8]
+  wire  Iinit = _Iinit_T_16 & Ichange; // @[PE.scala 51:162]
   wire [31:0] _Inew_T_1 = PEctrlregs_io_outData_27 + PEctrlregs_io_outData_12; // @[PE.scala 63:55]
   wire [31:0] _T_51 = PEctrlregs_io_outData_18 + 32'h1; // @[PE.scala 65:125]
   wire  canupdatestate = Decoder_io_canexe & io_run & ~io_finish; // @[PE.scala 66:50]
