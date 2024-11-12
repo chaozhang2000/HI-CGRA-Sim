@@ -722,6 +722,7 @@ end // initial
 endmodule
 module PEDecode(
   input  [31:0] io_inst_0,
+  input  [31:0] io_inst_1,
   input  [31:0] io_inst_2,
   input  [31:0] io_inst_3,
   input  [31:0] io_inst_4,
@@ -745,6 +746,7 @@ module PEDecode(
   output        io_linkneedtosendout_1,
   output        io_linkneedtosendout_2,
   output        io_linkneedtosendout_3,
+  output        io_fuinstskip,
   output        io_linkinstskip_0,
   output        io_linkinstskip_1,
   output        io_linkinstskip_2,
@@ -755,6 +757,7 @@ module PEDecode(
   wire [2:0] linkkey_1 = io_inst_0[25:23]; // @[PEDecode.scala 32:40]
   wire [2:0] linkkey_2 = io_inst_0[28:26]; // @[PEDecode.scala 32:40]
   wire [2:0] linkkey_3 = io_inst_0[31:29]; // @[PEDecode.scala 32:40]
+  wire [31:0] _io_fuinstskip_T_2 = io_iinum + io_inst_1; // @[PEDecode.scala 43:79]
   wire [31:0] _io_linkinstskip_0_T_2 = io_iinum + io_inst_2; // @[PEDecode.scala 45:124]
   wire [31:0] _io_linkinstskip_1_T_2 = io_iinum + io_inst_3; // @[PEDecode.scala 45:124]
   wire [31:0] _io_linkinstskip_2_T_2 = io_iinum + io_inst_4; // @[PEDecode.scala 45:124]
@@ -774,6 +777,7 @@ module PEDecode(
   assign io_linkneedtosendout_1 = linkkey_1 != 3'h0; // @[PEDecode.scala 34:41]
   assign io_linkneedtosendout_2 = linkkey_2 != 3'h0; // @[PEDecode.scala 34:41]
   assign io_linkneedtosendout_3 = linkkey_3 != 3'h0; // @[PEDecode.scala 34:41]
+  assign io_fuinstskip = io_iicnt < io_inst_1 | io_iicnt >= _io_fuinstskip_T_2; // @[PEDecode.scala 43:55]
   assign io_linkinstskip_0 = io_iicnt < io_inst_2 | io_iicnt >= _io_linkinstskip_0_T_2; // @[PEDecode.scala 45:100]
   assign io_linkinstskip_1 = io_iicnt < io_inst_3 | io_iicnt >= _io_linkinstskip_1_T_2; // @[PEDecode.scala 45:100]
   assign io_linkinstskip_2 = io_iicnt < io_inst_4 | io_iicnt >= _io_linkinstskip_2_T_2; // @[PEDecode.scala 45:100]
@@ -1205,6 +1209,7 @@ module PE(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -1228,6 +1233,7 @@ module PE(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -1348,6 +1354,7 @@ module PE(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -1463,6 +1470,7 @@ module PE(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -1486,6 +1494,7 @@ module PE(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -1585,11 +1594,11 @@ module PE(
   assign io_outLinks_0_bits = Crossbar_io_out_0; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -1654,6 +1663,7 @@ module PE(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -1954,6 +1964,7 @@ module PE_1(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -1977,6 +1988,7 @@ module PE_1(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -2097,6 +2109,7 @@ module PE_1(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -2212,6 +2225,7 @@ module PE_1(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -2235,6 +2249,7 @@ module PE_1(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -2336,11 +2351,11 @@ module PE_1(
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -2405,6 +2420,7 @@ module PE_1(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -2705,6 +2721,7 @@ module PE_2(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -2728,6 +2745,7 @@ module PE_2(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -2848,6 +2866,7 @@ module PE_2(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -2963,6 +2982,7 @@ module PE_2(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -2986,6 +3006,7 @@ module PE_2(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -3087,11 +3108,11 @@ module PE_2(
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -3156,6 +3177,7 @@ module PE_2(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -3453,6 +3475,7 @@ module PE_3(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -3476,6 +3499,7 @@ module PE_3(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -3596,6 +3620,7 @@ module PE_3(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -3711,6 +3736,7 @@ module PE_3(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -3734,6 +3760,7 @@ module PE_3(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -3833,11 +3860,11 @@ module PE_3(
   assign io_outLinks_0_bits = Crossbar_io_out_0; // @[PE.scala 155:15]
   assign io_outLinks_2_valid = canupdatestate & Decoder_io_linkneedtosendout_2 & ~Decoder_io_linkinstskip_2; // @[PE.scala 156:68]
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -3902,6 +3929,7 @@ module PE_3(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -4202,6 +4230,7 @@ module PE_4(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -4225,6 +4254,7 @@ module PE_4(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -4345,6 +4375,7 @@ module PE_4(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -4460,6 +4491,7 @@ module PE_4(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -4483,6 +4515,7 @@ module PE_4(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -4584,11 +4617,11 @@ module PE_4(
   assign io_outLinks_1_bits = Crossbar_io_out_1; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -4653,6 +4686,7 @@ module PE_4(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -4956,6 +4990,7 @@ module PE_5(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -4979,6 +5014,7 @@ module PE_5(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -5099,6 +5135,7 @@ module PE_5(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -5214,6 +5251,7 @@ module PE_5(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -5237,6 +5275,7 @@ module PE_5(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -5340,11 +5379,11 @@ module PE_5(
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -5409,6 +5448,7 @@ module PE_5(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -5712,6 +5752,7 @@ module PE_6(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -5735,6 +5776,7 @@ module PE_6(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -5855,6 +5897,7 @@ module PE_6(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -5970,6 +6013,7 @@ module PE_6(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -5993,6 +6037,7 @@ module PE_6(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -6096,11 +6141,11 @@ module PE_6(
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -6165,6 +6210,7 @@ module PE_6(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -6465,6 +6511,7 @@ module PE_7(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -6488,6 +6535,7 @@ module PE_7(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -6608,6 +6656,7 @@ module PE_7(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -6723,6 +6772,7 @@ module PE_7(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -6746,6 +6796,7 @@ module PE_7(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -6847,11 +6898,11 @@ module PE_7(
   assign io_outLinks_1_bits = Crossbar_io_out_1; // @[PE.scala 155:15]
   assign io_outLinks_2_valid = canupdatestate & Decoder_io_linkneedtosendout_2 & ~Decoder_io_linkinstskip_2; // @[PE.scala 156:68]
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -6916,6 +6967,7 @@ module PE_7(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -7216,6 +7268,7 @@ module PE_8(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -7239,6 +7292,7 @@ module PE_8(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -7359,6 +7413,7 @@ module PE_8(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -7474,6 +7529,7 @@ module PE_8(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -7497,6 +7553,7 @@ module PE_8(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -7598,11 +7655,11 @@ module PE_8(
   assign io_outLinks_1_bits = Crossbar_io_out_1; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -7667,6 +7724,7 @@ module PE_8(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -7970,6 +8028,7 @@ module PE_9(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -7993,6 +8052,7 @@ module PE_9(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -8113,6 +8173,7 @@ module PE_9(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -8228,6 +8289,7 @@ module PE_9(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -8251,6 +8313,7 @@ module PE_9(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -8354,11 +8417,11 @@ module PE_9(
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -8423,6 +8486,7 @@ module PE_9(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -8726,6 +8790,7 @@ module PE_10(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -8749,6 +8814,7 @@ module PE_10(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -8869,6 +8935,7 @@ module PE_10(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -8984,6 +9051,7 @@ module PE_10(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -9007,6 +9075,7 @@ module PE_10(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -9110,11 +9179,11 @@ module PE_10(
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -9179,6 +9248,7 @@ module PE_10(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -9479,6 +9549,7 @@ module PE_11(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -9502,6 +9573,7 @@ module PE_11(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -9622,6 +9694,7 @@ module PE_11(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -9737,6 +9810,7 @@ module PE_11(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -9760,6 +9834,7 @@ module PE_11(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -9861,11 +9936,11 @@ module PE_11(
   assign io_outLinks_1_bits = Crossbar_io_out_1; // @[PE.scala 155:15]
   assign io_outLinks_2_valid = canupdatestate & Decoder_io_linkneedtosendout_2 & ~Decoder_io_linkinstskip_2; // @[PE.scala 156:68]
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -9930,6 +10005,7 @@ module PE_11(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -10227,6 +10303,7 @@ module PE_12(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -10250,6 +10327,7 @@ module PE_12(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -10370,6 +10448,7 @@ module PE_12(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -10485,6 +10564,7 @@ module PE_12(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -10508,6 +10588,7 @@ module PE_12(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -10607,11 +10688,11 @@ module PE_12(
   assign io_outLinks_1_bits = Crossbar_io_out_1; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -10676,6 +10757,7 @@ module PE_12(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -10976,6 +11058,7 @@ module PE_13(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -10999,6 +11082,7 @@ module PE_13(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -11119,6 +11203,7 @@ module PE_13(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -11234,6 +11319,7 @@ module PE_13(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -11257,6 +11343,7 @@ module PE_13(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -11358,11 +11445,11 @@ module PE_13(
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -11427,6 +11514,7 @@ module PE_13(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -11727,6 +11815,7 @@ module PE_14(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -11750,6 +11839,7 @@ module PE_14(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -11870,6 +11960,7 @@ module PE_14(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -11985,6 +12076,7 @@ module PE_14(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -12008,6 +12100,7 @@ module PE_14(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -12109,11 +12202,11 @@ module PE_14(
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
   assign io_outLinks_3_valid = canupdatestate & Decoder_io_linkneedtosendout_3 & ~Decoder_io_linkinstskip_3; // @[PE.scala 156:68]
   assign io_outLinks_3_bits = Crossbar_io_out_3; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -12178,6 +12271,7 @@ module PE_14(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]
@@ -12475,6 +12569,7 @@ module PE_15(
   wire [31:0] Instmems_5_io_raddr; // @[PE.scala 21:11]
   wire [31:0] Instmems_5_io_rdata; // @[PE.scala 21:11]
   wire [31:0] Decoder_io_inst_0; // @[PE.scala 23:23]
+  wire [31:0] Decoder_io_inst_1; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_2; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_3; // @[PE.scala 23:23]
   wire [31:0] Decoder_io_inst_4; // @[PE.scala 23:23]
@@ -12498,6 +12593,7 @@ module PE_15(
   wire  Decoder_io_linkneedtosendout_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_2; // @[PE.scala 23:23]
   wire  Decoder_io_linkneedtosendout_3; // @[PE.scala 23:23]
+  wire  Decoder_io_fuinstskip; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_0; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_1; // @[PE.scala 23:23]
   wire  Decoder_io_linkinstskip_2; // @[PE.scala 23:23]
@@ -12618,6 +12714,7 @@ module PE_15(
   wire  _T_56 = canupdatestate & Decoder_io_haveshiftconst_1; // @[PE.scala 71:57]
   wire [31:0] _Alu_io_src1_T_5 = $signed(Srcmuxs_0_io_out) + $signed(Shiftconstmems_0_io_rdata); // @[PE.scala 144:111]
   wire [31:0] _Alu_io_src2_T_5 = $signed(Srcmuxs_1_io_out) + $signed(Shiftconstmems_1_io_rdata); // @[PE.scala 145:111]
+  wire  _io_datamemio_ren_T_1 = ~Decoder_io_fuinstskip; // @[PE.scala 168:64]
   PEctrlregs PEctrlregs ( // @[PE.scala 18:26]
     .clock(PEctrlregs_clock),
     .reset(PEctrlregs_reset),
@@ -12733,6 +12830,7 @@ module PE_15(
   );
   PEDecode Decoder ( // @[PE.scala 23:23]
     .io_inst_0(Decoder_io_inst_0),
+    .io_inst_1(Decoder_io_inst_1),
     .io_inst_2(Decoder_io_inst_2),
     .io_inst_3(Decoder_io_inst_3),
     .io_inst_4(Decoder_io_inst_4),
@@ -12756,6 +12854,7 @@ module PE_15(
     .io_linkneedtosendout_1(Decoder_io_linkneedtosendout_1),
     .io_linkneedtosendout_2(Decoder_io_linkneedtosendout_2),
     .io_linkneedtosendout_3(Decoder_io_linkneedtosendout_3),
+    .io_fuinstskip(Decoder_io_fuinstskip),
     .io_linkinstskip_0(Decoder_io_linkinstskip_0),
     .io_linkinstskip_1(Decoder_io_linkinstskip_1),
     .io_linkinstskip_2(Decoder_io_linkinstskip_2),
@@ -12855,11 +12954,11 @@ module PE_15(
   assign io_outLinks_1_bits = Crossbar_io_out_1; // @[PE.scala 155:15]
   assign io_outLinks_2_valid = canupdatestate & Decoder_io_linkneedtosendout_2 & ~Decoder_io_linkinstskip_2; // @[PE.scala 156:68]
   assign io_outLinks_2_bits = Crossbar_io_out_2; // @[PE.scala 155:15]
-  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 168:34]
-  assign io_datamemio_wen = Alu_io_datamemio_wen; // @[PE.scala 167:16]
+  assign io_finish = PEctrlregs_io_outData_28 == 32'h1; // @[PE.scala 171:34]
+  assign io_datamemio_wen = Alu_io_datamemio_wen & canupdatestate & _io_datamemio_ren_T_1; // @[PE.scala 169:61]
   assign io_datamemio_waddr = Alu_io_datamemio_waddr; // @[PE.scala 167:16]
   assign io_datamemio_wdata = Alu_io_datamemio_wdata; // @[PE.scala 167:16]
-  assign io_datamemio_ren = Alu_io_datamemio_ren; // @[PE.scala 167:16]
+  assign io_datamemio_ren = Alu_io_datamemio_ren & canupdatestate & ~Decoder_io_fuinstskip; // @[PE.scala 168:61]
   assign io_datamemio_raddr = Alu_io_datamemio_raddr; // @[PE.scala 167:16]
   assign PEctrlregs_clock = clock;
   assign PEctrlregs_reset = reset;
@@ -12924,6 +13023,7 @@ module PE_15(
   assign Instmems_5_io_wdata = io_wdata; // @[PE.scala 97:24]
   assign Instmems_5_io_raddr = canupdatestate ? _T_7 : PEctrlregs_io_outData_19; // @[PE.scala 93:36]
   assign Decoder_io_inst_0 = Instmems_0_io_rdata; // @[PE.scala 101:78]
+  assign Decoder_io_inst_1 = Instmems_1_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_2 = Instmems_2_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_3 = Instmems_3_io_rdata; // @[PE.scala 101:78]
   assign Decoder_io_inst_4 = Instmems_4_io_rdata; // @[PE.scala 101:78]

@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 		readreg(cgra,tfp,0);
 
 		//config CGRA
-		std::string filename = "/home/zc/HI-CGRA-Flow/HI-CGRA-Sim/bins/fft0.bin";
+		std::string filename = "/home/zc/HI-CGRA-Flow/HI-CGRA-Sim/bins/conv3.bin";
     // 打开文件
     std::ifstream file(filename, std::ios::binary|std::ios::ate);
     // 检查文件是否成功打开
@@ -107,16 +107,17 @@ int main(int argc, char** argv) {
 		CYCLEADD(1)
 
 		//load data
-int butterfly_i[16] = {1024,0,1024,0,1024,0,1024,0,-1024,0,-1024,0,-1024,0,-1024,0};
-int butterfly_o[16] = {0};
-int w[16] = {1024,0,724,-724,0,-1023,-724,-724};
-		int* datas[4]; datas[0] = butterfly_i; datas[1] = butterfly_o; datas[2] = w;
+		int data1[20] ={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+		int data2[20] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+		int data3[20] ={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+		int data4[20] = {0};
+		int* datas[4]; datas[0] = data1; datas[1] = data2; datas[2] = data3; datas[3] = data4;
 		writereg(cgra,tfp,0,2);
 		for(int i = 0;i<4;i++){
 			writereg(cgra,tfp,2<<2,i);//memnum
 			writereg(cgra,tfp,3<<2,0);//startaddr
 			writereg(cgra,tfp,4<<2,0);//addaddr
-			axistream_in(cgra,tfp,datas[i],16);
+			axistream_in(cgra,tfp,datas[i],20);
 		}
 
 		//exe
