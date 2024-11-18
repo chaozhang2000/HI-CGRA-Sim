@@ -103,16 +103,17 @@ int main(int argc, char** argv) {
     file.close();
     // 打印文件大小
     std::cout << "文件 " << filename << " 的大小为 " << fileSize << " 字节" << std::endl;
+		writereg(cgra,tfp,0,1);
 		axistream_in(cgra,tfp,(int*)bitstream,fileSize/4);
 		CYCLEADD(1)
 
-		writereg(cgra,tfp,9<<2,5);
 
 		//load data
 int butterfly_i[16] = {1024,0,1024,0,1024,0,1024,0,-1024,0,-1024,0,-1024,0,-1024,0};
 int butterfly_o[16] = {0};
 int w[16] = {1024,0,724,-724,0,-1023,-724,-724};
-		int* datas[4]; datas[0] = butterfly_i; datas[1] = butterfly_o; datas[2] = w;
+int m[16] = {4};
+		int* datas[4]; datas[0] = butterfly_i; datas[1] = butterfly_o; datas[2] = w;datas[3] = m;
 		writereg(cgra,tfp,0,2);
 		for(int i = 0;i<4;i++){
 			writereg(cgra,tfp,2<<2,i);//memnum
@@ -127,6 +128,87 @@ int w[16] = {1024,0,724,-724,0,-1023,-724,-724};
 
 
 
+		//config CGRA
+		filename = "/home/zc/HI-CGRA-Flow/HI-CGRA-Sim/bins/fft1.bin";
+    // 打开文件
+    std::ifstream file1(filename, std::ios::binary|std::ios::ate);
+    // 检查文件是否成功打开
+    if (!file1.is_open()) {
+        std::cerr << "无法打开文件 " << filename << std::endl;
+        return 1;
+    }
+    // 定位到文件末尾以获取大小
+    file1.seekg(0, std::ios::end);
+    fileSize = file1.tellg();
+
+		file1.seekg(0,std::ios::beg);
+
+		char * bitstream1 = new char[fileSize];
+		if(!file1.read(bitstream1,fileSize)){
+			std::cerr << "读取文件内容错误" << std::endl;
+		}
+    file1.close();
+    // 打印文件大小
+    std::cout << "文件 " << filename << " 的大小为 " << fileSize << " 字节" << std::endl;
+		writereg(cgra,tfp,0,1);
+		axistream_in(cgra,tfp,(int*)bitstream1,fileSize/4);
+		CYCLEADD(1)
+		//exe
+		writereg(cgra,tfp,0,3);
+		CYCLEADD(600)
+
+		//config CGRA
+		filename = "/home/zc/HI-CGRA-Flow/HI-CGRA-Sim/bins/fft2.bin";
+    // 打开文件
+    std::ifstream file2(filename, std::ios::binary|std::ios::ate);
+    // 检查文件是否成功打开
+    if (!file2.is_open()) {
+        std::cerr << "无法打开文件 " << filename << std::endl;
+        return 1;
+    }
+    // 定位到文件末尾以获取大小
+    file2.seekg(0, std::ios::end);
+    fileSize = file2.tellg();
+
+		file2.seekg(0,std::ios::beg);
+
+		char * bitstream2 = new char[fileSize];
+		if(!file2.read(bitstream2,fileSize)){
+			std::cerr << "读取文件内容错误" << std::endl;
+		}
+    file2.close();
+    // 打印文件大小
+    std::cout << "文件 " << filename << " 的大小为 " << fileSize << " 字节" << std::endl;
+		writereg(cgra,tfp,0,1);
+		axistream_in(cgra,tfp,(int*)bitstream2,fileSize/4);
+		CYCLEADD(1)
+
+			writereg(cgra,tfp,0,2);//memnum
+			writereg(cgra,tfp,2<<2,3);//memnum
+			writereg(cgra,tfp,3<<2,0);//startaddr
+			writereg(cgra,tfp,4<<2,0);//addaddr
+			m[0] = 8;
+			axistream_in(cgra,tfp,m,16);
+		//exe
+		writereg(cgra,tfp,0,3);
+		CYCLEADD(600)
+						/*
+		writereg(cgra,tfp,0,1);
+		axistream_in(cgra,tfp,(int*)bitstream,fileSize/4);
+		writereg(cgra,tfp,0,1);
+		writereg(cgra,tfp,17<<2,4);
+		writereg(cgra,tfp,13<<2,8);
+		writereg(cgra,tfp,17<<2,4);
+		writereg(cgra,tfp,25<<2,0);
+		writereg(cgra,tfp,26<<2,0);
+		//exe
+			writereg(cgra,tfp,2<<2,i);//memnum
+			writereg(cgra,tfp,3<<2,0);//startaddr
+			writereg(cgra,tfp,4<<2,0);//addaddr
+			axistream_in(cgra,tfp,datas[i],16);
+		writereg(cgra,tfp,0,3);
+		CYCLEADD(600)
+		*/
 		//read data
 		for(int i = 0;i<4;i++){
 		writereg(cgra,tfp,2<<2,i);
