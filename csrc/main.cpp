@@ -106,6 +106,8 @@ int main(int argc, char** argv) {
 		axistream_in(cgra,tfp,(int*)bitstream,fileSize/4);
 		CYCLEADD(1)
 
+		writereg(cgra,tfp,9<<2,5);
+
 		//load data
 int butterfly_i[16] = {1024,0,1024,0,1024,0,1024,0,-1024,0,-1024,0,-1024,0,-1024,0};
 int butterfly_o[16] = {0};
