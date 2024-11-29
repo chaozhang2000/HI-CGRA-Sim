@@ -13169,21 +13169,21 @@ module Memutil_160(
   reg [31:0] _RAND_1;
   reg [31:0] _RAND_2;
 `endif // RANDOMIZE_REG_INIT
-  reg [31:0] mem [0:511]; // @[Memutil.scala 13:47]
+  reg [31:0] mem [0:2047]; // @[Memutil.scala 13:47]
   wire  mem_io_rdata_MPORT_en; // @[Memutil.scala 13:47]
-  wire [8:0] mem_io_rdata_MPORT_addr; // @[Memutil.scala 13:47]
+  wire [10:0] mem_io_rdata_MPORT_addr; // @[Memutil.scala 13:47]
   wire [31:0] mem_io_rdata_MPORT_data; // @[Memutil.scala 13:47]
   wire [31:0] mem_MPORT_data; // @[Memutil.scala 13:47]
-  wire [8:0] mem_MPORT_addr; // @[Memutil.scala 13:47]
+  wire [10:0] mem_MPORT_addr; // @[Memutil.scala 13:47]
   wire  mem_MPORT_mask; // @[Memutil.scala 13:47]
   wire  mem_MPORT_en; // @[Memutil.scala 13:47]
   reg  mem_io_rdata_MPORT_en_pipe_0;
-  reg [8:0] mem_io_rdata_MPORT_addr_pipe_0;
+  reg [10:0] mem_io_rdata_MPORT_addr_pipe_0;
   assign mem_io_rdata_MPORT_en = mem_io_rdata_MPORT_en_pipe_0;
   assign mem_io_rdata_MPORT_addr = mem_io_rdata_MPORT_addr_pipe_0;
   assign mem_io_rdata_MPORT_data = mem[mem_io_rdata_MPORT_addr]; // @[Memutil.scala 13:47]
   assign mem_MPORT_data = io_wdata;
-  assign mem_MPORT_addr = io_waddr[8:0];
+  assign mem_MPORT_addr = io_waddr[10:0];
   assign mem_MPORT_mask = 1'h1;
   assign mem_MPORT_en = io_wen;
   assign io_rdata = mem_io_rdata_MPORT_data; // @[Memutil.scala 14:16]
@@ -13193,7 +13193,7 @@ module Memutil_160(
     end
     mem_io_rdata_MPORT_en_pipe_0 <= 1'h1;
     if (1'h1) begin
-      mem_io_rdata_MPORT_addr_pipe_0 <= io_raddr[8:0];
+      mem_io_rdata_MPORT_addr_pipe_0 <= io_raddr[10:0];
     end
   end
 // Register and memory initialization
@@ -13233,14 +13233,14 @@ initial begin
     `endif
 `ifdef RANDOMIZE_MEM_INIT
   _RAND_0 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 512; initvar = initvar+1)
+  for (initvar = 0; initvar < 2048; initvar = initvar+1)
     mem[initvar] = _RAND_0[31:0];
 `endif // RANDOMIZE_MEM_INIT
 `ifdef RANDOMIZE_REG_INIT
   _RAND_1 = {1{`RANDOM}};
   mem_io_rdata_MPORT_en_pipe_0 = _RAND_1[0:0];
   _RAND_2 = {1{`RANDOM}};
-  mem_io_rdata_MPORT_addr_pipe_0 = _RAND_2[8:0];
+  mem_io_rdata_MPORT_addr_pipe_0 = _RAND_2[10:0];
 `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial
@@ -14183,7 +14183,7 @@ module CGRA(
   wire [31:0] _configwaddrnext_T_2 = configwaddr + 32'h1; // @[CGRA.scala 186:64]
   wire [31:0] _configPEnext_T_2 = configPEcnt + 32'h1; // @[CGRA.scala 187:75]
   wire [31:0] configPEnext = configPEcnt < 32'hf ? _configPEnext_T_2 : 32'h0; // @[CGRA.scala 187:22]
-  wire [31:0] _GEN_42 = configallpe ? ctrlregs_axil_wdata : 32'h0; // @[CGRA.scala 201:26 202:17 207:17]
+  wire [31:0] _GEN_42 = configallpe ? _ctrlregs_axil_wdata_T_3 : 32'h0; // @[CGRA.scala 201:26 202:17 207:17]
   wire  _io_axistream_m_valid_T_1 = ctrlregs_4 < ctrlregs_5; // @[CGRA.scala 215:115]
   wire  _GEN_51 = 2'h1 == ctrlregs_2[1:0] ? Datamem_1_io_memoptvalid : Datamem_io_memoptvalid; // @[CGRA.scala 215:{155,155}]
   wire  _GEN_52 = 2'h2 == ctrlregs_2[1:0] ? Datamem_2_io_memoptvalid : _GEN_51; // @[CGRA.scala 215:{155,155}]
@@ -14198,6 +14198,7 @@ module CGRA(
   wire  _T_221 = config_finish | cgrafinish; // @[CGRA.scala 223:55]
   wire [31:0] _T_223 = ctrlregs_4 + 32'h1; // @[CGRA.scala 225:85]
   wire  _T_232 = _T_114 | _T_123 & io_axistream_m_valid & io_axistream_m_ready & _io_axistream_m_valid_T_1; // @[CGRA.scala 226:144]
+  wire  _T_234 = ctrlregs_axil_wen & ~configallpe; // @[CGRA.scala 230:30]
   wire [31:0] _GEN_58 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_0; // @[CGRA.scala 19:27 231:{35,35}]
   wire [31:0] _GEN_59 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_1; // @[CGRA.scala 19:27 231:{35,35}]
   wire [31:0] _GEN_60 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_2; // @[CGRA.scala 19:27 231:{35,35}]
@@ -14205,12 +14206,12 @@ module CGRA(
   wire [31:0] _GEN_62 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_4; // @[CGRA.scala 19:27 231:{35,35}]
   wire [31:0] _GEN_63 = 3'h5 == currentAddressw[2:0] ? ctrlregs_axil_wdata : ctrlregs_5; // @[CGRA.scala 19:27 231:{35,35}]
   wire [31:0] _GEN_64 = _T_221 ? statenext : ctrlregs_0; // @[CGRA.scala 232:46 233:21 19:27]
-  wire [31:0] _GEN_65 = ctrlregs_axil_wen ? _GEN_58 : _GEN_64; // @[CGRA.scala 230:30]
-  wire [31:0] _GEN_66 = ctrlregs_axil_wen ? _GEN_59 : ctrlregs_1; // @[CGRA.scala 19:27 230:30]
-  wire [31:0] _GEN_67 = ctrlregs_axil_wen ? _GEN_60 : ctrlregs_2; // @[CGRA.scala 19:27 230:30]
-  wire [31:0] _GEN_68 = ctrlregs_axil_wen ? _GEN_61 : ctrlregs_3; // @[CGRA.scala 19:27 230:30]
-  wire [31:0] _GEN_69 = ctrlregs_axil_wen ? _GEN_62 : ctrlregs_4; // @[CGRA.scala 19:27 230:30]
-  wire [31:0] _GEN_70 = ctrlregs_axil_wen ? _GEN_63 : ctrlregs_5; // @[CGRA.scala 19:27 230:30]
+  wire [31:0] _GEN_65 = ctrlregs_axil_wen & ~configallpe ? _GEN_58 : _GEN_64; // @[CGRA.scala 230:48]
+  wire [31:0] _GEN_66 = ctrlregs_axil_wen & ~configallpe ? _GEN_59 : ctrlregs_1; // @[CGRA.scala 19:27 230:48]
+  wire [31:0] _GEN_67 = ctrlregs_axil_wen & ~configallpe ? _GEN_60 : ctrlregs_2; // @[CGRA.scala 19:27 230:48]
+  wire [31:0] _GEN_68 = ctrlregs_axil_wen & ~configallpe ? _GEN_61 : ctrlregs_3; // @[CGRA.scala 19:27 230:48]
+  wire [31:0] _GEN_69 = ctrlregs_axil_wen & ~configallpe ? _GEN_62 : ctrlregs_4; // @[CGRA.scala 19:27 230:48]
+  wire [31:0] _GEN_70 = ctrlregs_axil_wen & ~configallpe ? _GEN_63 : ctrlregs_5; // @[CGRA.scala 19:27 230:48]
   wire [31:0] _GEN_71 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_65; // @[CGRA.scala 231:{35,35}]
   wire [31:0] _GEN_72 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_66; // @[CGRA.scala 231:{35,35}]
   wire [31:0] _GEN_73 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_67; // @[CGRA.scala 231:{35,35}]
@@ -14218,36 +14219,36 @@ module CGRA(
   wire [31:0] _GEN_75 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_69; // @[CGRA.scala 231:{35,35}]
   wire [31:0] _GEN_76 = 3'h5 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_70; // @[CGRA.scala 231:{35,35}]
   wire [31:0] _GEN_77 = cgrafinish ? {{31'd0}, cgrafinish} : _GEN_66; // @[CGRA.scala 232:46 233:21]
-  wire [31:0] _GEN_78 = ctrlregs_axil_wen ? _GEN_71 : _GEN_65; // @[CGRA.scala 230:30]
-  wire [31:0] _GEN_79 = ctrlregs_axil_wen ? _GEN_72 : _GEN_77; // @[CGRA.scala 230:30]
-  wire [31:0] _GEN_80 = ctrlregs_axil_wen ? _GEN_73 : _GEN_67; // @[CGRA.scala 230:30]
-  wire [31:0] _GEN_81 = ctrlregs_axil_wen ? _GEN_74 : _GEN_68; // @[CGRA.scala 230:30]
-  wire [31:0] _GEN_82 = ctrlregs_axil_wen ? _GEN_75 : _GEN_69; // @[CGRA.scala 230:30]
-  wire [31:0] _GEN_83 = ctrlregs_axil_wen ? _GEN_76 : _GEN_70; // @[CGRA.scala 230:30]
+  wire [31:0] _GEN_78 = ctrlregs_axil_wen & ~configallpe ? _GEN_71 : _GEN_65; // @[CGRA.scala 230:48]
+  wire [31:0] _GEN_79 = ctrlregs_axil_wen & ~configallpe ? _GEN_72 : _GEN_77; // @[CGRA.scala 230:48]
+  wire [31:0] _GEN_80 = ctrlregs_axil_wen & ~configallpe ? _GEN_73 : _GEN_67; // @[CGRA.scala 230:48]
+  wire [31:0] _GEN_81 = ctrlregs_axil_wen & ~configallpe ? _GEN_74 : _GEN_68; // @[CGRA.scala 230:48]
+  wire [31:0] _GEN_82 = ctrlregs_axil_wen & ~configallpe ? _GEN_75 : _GEN_69; // @[CGRA.scala 230:48]
+  wire [31:0] _GEN_83 = ctrlregs_axil_wen & ~configallpe ? _GEN_76 : _GEN_70; // @[CGRA.scala 230:48]
   wire [31:0] _GEN_84 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_78; // @[CGRA.scala 237:{35,35}]
   wire [31:0] _GEN_85 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_79; // @[CGRA.scala 237:{35,35}]
   wire [31:0] _GEN_86 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_80; // @[CGRA.scala 237:{35,35}]
   wire [31:0] _GEN_87 = 3'h3 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_81; // @[CGRA.scala 237:{35,35}]
   wire [31:0] _GEN_88 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_82; // @[CGRA.scala 237:{35,35}]
   wire [31:0] _GEN_89 = 3'h5 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_83; // @[CGRA.scala 237:{35,35}]
-  wire [31:0] _GEN_90 = ctrlregs_axil_wen ? _GEN_84 : _GEN_78; // @[CGRA.scala 236:30]
-  wire [31:0] _GEN_91 = ctrlregs_axil_wen ? _GEN_85 : _GEN_79; // @[CGRA.scala 236:30]
-  wire [31:0] _GEN_92 = ctrlregs_axil_wen ? _GEN_86 : _GEN_80; // @[CGRA.scala 236:30]
-  wire [31:0] _GEN_93 = ctrlregs_axil_wen ? _GEN_87 : _GEN_81; // @[CGRA.scala 236:30]
-  wire [31:0] _GEN_94 = ctrlregs_axil_wen ? _GEN_88 : _GEN_82; // @[CGRA.scala 236:30]
-  wire [31:0] _GEN_95 = ctrlregs_axil_wen ? _GEN_89 : _GEN_83; // @[CGRA.scala 236:30]
+  wire [31:0] _GEN_90 = _T_234 ? _GEN_84 : _GEN_78; // @[CGRA.scala 236:48]
+  wire [31:0] _GEN_91 = _T_234 ? _GEN_85 : _GEN_79; // @[CGRA.scala 236:48]
+  wire [31:0] _GEN_92 = _T_234 ? _GEN_86 : _GEN_80; // @[CGRA.scala 236:48]
+  wire [31:0] _GEN_93 = _T_234 ? _GEN_87 : _GEN_81; // @[CGRA.scala 236:48]
+  wire [31:0] _GEN_94 = _T_234 ? _GEN_88 : _GEN_82; // @[CGRA.scala 236:48]
+  wire [31:0] _GEN_95 = _T_234 ? _GEN_89 : _GEN_83; // @[CGRA.scala 236:48]
   wire [31:0] _GEN_96 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_90; // @[CGRA.scala 237:{35,35}]
   wire [31:0] _GEN_97 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_91; // @[CGRA.scala 237:{35,35}]
   wire [31:0] _GEN_98 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_92; // @[CGRA.scala 237:{35,35}]
   wire [31:0] _GEN_99 = 3'h3 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_93; // @[CGRA.scala 237:{35,35}]
   wire [31:0] _GEN_100 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_94; // @[CGRA.scala 237:{35,35}]
   wire [31:0] _GEN_101 = 3'h5 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_95; // @[CGRA.scala 237:{35,35}]
-  wire [31:0] _GEN_102 = ctrlregs_axil_wen ? _GEN_96 : _GEN_90; // @[CGRA.scala 236:30]
-  wire [31:0] _GEN_103 = ctrlregs_axil_wen ? _GEN_97 : _GEN_91; // @[CGRA.scala 236:30]
-  wire [31:0] _GEN_104 = ctrlregs_axil_wen ? _GEN_98 : _GEN_92; // @[CGRA.scala 236:30]
-  wire [31:0] _GEN_105 = ctrlregs_axil_wen ? _GEN_99 : _GEN_93; // @[CGRA.scala 236:30]
-  wire [31:0] _GEN_106 = ctrlregs_axil_wen ? _GEN_100 : _GEN_94; // @[CGRA.scala 236:30]
-  wire [31:0] _GEN_107 = ctrlregs_axil_wen ? _GEN_101 : _GEN_95; // @[CGRA.scala 236:30]
+  wire [31:0] _GEN_102 = _T_234 ? _GEN_96 : _GEN_90; // @[CGRA.scala 236:48]
+  wire [31:0] _GEN_103 = _T_234 ? _GEN_97 : _GEN_91; // @[CGRA.scala 236:48]
+  wire [31:0] _GEN_104 = _T_234 ? _GEN_98 : _GEN_92; // @[CGRA.scala 236:48]
+  wire [31:0] _GEN_105 = _T_234 ? _GEN_99 : _GEN_93; // @[CGRA.scala 236:48]
+  wire [31:0] _GEN_106 = _T_234 ? _GEN_100 : _GEN_94; // @[CGRA.scala 236:48]
+  wire [31:0] _GEN_107 = _T_234 ? _GEN_101 : _GEN_95; // @[CGRA.scala 236:48]
   wire [31:0] _GEN_108 = 3'h0 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_102; // @[CGRA.scala 231:{35,35}]
   wire [31:0] _GEN_109 = 3'h1 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_103; // @[CGRA.scala 231:{35,35}]
   wire [31:0] _GEN_110 = 3'h2 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_104; // @[CGRA.scala 231:{35,35}]
@@ -14255,12 +14256,12 @@ module CGRA(
   wire [31:0] _GEN_112 = 3'h4 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_106; // @[CGRA.scala 231:{35,35}]
   wire [31:0] _GEN_113 = 3'h5 == currentAddressw[2:0] ? ctrlregs_axil_wdata : _GEN_107; // @[CGRA.scala 231:{35,35}]
   wire [31:0] _GEN_114 = _T_232 ? _T_223 : _GEN_106; // @[CGRA.scala 232:46 233:21]
-  wire [31:0] _GEN_115 = ctrlregs_axil_wen ? _GEN_108 : _GEN_102; // @[CGRA.scala 230:30]
-  wire [31:0] _GEN_116 = ctrlregs_axil_wen ? _GEN_109 : _GEN_103; // @[CGRA.scala 230:30]
-  wire [31:0] _GEN_117 = ctrlregs_axil_wen ? _GEN_110 : _GEN_104; // @[CGRA.scala 230:30]
-  wire [31:0] _GEN_118 = ctrlregs_axil_wen ? _GEN_111 : _GEN_105; // @[CGRA.scala 230:30]
-  wire [31:0] _GEN_119 = ctrlregs_axil_wen ? _GEN_112 : _GEN_114; // @[CGRA.scala 230:30]
-  wire [31:0] _GEN_120 = ctrlregs_axil_wen ? _GEN_113 : _GEN_107; // @[CGRA.scala 230:30]
+  wire [31:0] _GEN_115 = ctrlregs_axil_wen & ~configallpe ? _GEN_108 : _GEN_102; // @[CGRA.scala 230:48]
+  wire [31:0] _GEN_116 = ctrlregs_axil_wen & ~configallpe ? _GEN_109 : _GEN_103; // @[CGRA.scala 230:48]
+  wire [31:0] _GEN_117 = ctrlregs_axil_wen & ~configallpe ? _GEN_110 : _GEN_104; // @[CGRA.scala 230:48]
+  wire [31:0] _GEN_118 = ctrlregs_axil_wen & ~configallpe ? _GEN_111 : _GEN_105; // @[CGRA.scala 230:48]
+  wire [31:0] _GEN_119 = ctrlregs_axil_wen & ~configallpe ? _GEN_112 : _GEN_114; // @[CGRA.scala 230:48]
+  wire [31:0] _GEN_120 = ctrlregs_axil_wen & ~configallpe ? _GEN_113 : _GEN_107; // @[CGRA.scala 230:48]
   PE PE ( // @[CGRA.scala 15:62]
     .clock(PE_clock),
     .reset(PE_reset),
@@ -15494,7 +15495,7 @@ module CGRA(
   always @(posedge clock) begin
     if (reset) begin // @[CGRA.scala 19:27]
       ctrlregs_0 <= 32'h0; // @[CGRA.scala 19:27]
-    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 236:30]
+    end else if (_T_234) begin // @[CGRA.scala 236:48]
       if (3'h0 == currentAddressw[2:0]) begin // @[CGRA.scala 237:35]
         if (2'h0 == statew) begin // @[CGRA.scala 131:18]
           ctrlregs_0 <= 32'h0; // @[CGRA.scala 122:23]
@@ -15509,7 +15510,7 @@ module CGRA(
     end
     if (reset) begin // @[CGRA.scala 19:27]
       ctrlregs_1 <= 32'h0; // @[CGRA.scala 19:27]
-    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 236:30]
+    end else if (_T_234) begin // @[CGRA.scala 236:48]
       if (3'h1 == currentAddressw[2:0]) begin // @[CGRA.scala 237:35]
         if (2'h0 == statew) begin // @[CGRA.scala 131:18]
           ctrlregs_1 <= 32'h0; // @[CGRA.scala 122:23]
@@ -15524,7 +15525,7 @@ module CGRA(
     end
     if (reset) begin // @[CGRA.scala 19:27]
       ctrlregs_2 <= 32'h0; // @[CGRA.scala 19:27]
-    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 236:30]
+    end else if (_T_234) begin // @[CGRA.scala 236:48]
       if (3'h2 == currentAddressw[2:0]) begin // @[CGRA.scala 237:35]
         if (2'h0 == statew) begin // @[CGRA.scala 131:18]
           ctrlregs_2 <= 32'h0; // @[CGRA.scala 122:23]
@@ -15539,7 +15540,7 @@ module CGRA(
     end
     if (reset) begin // @[CGRA.scala 19:27]
       ctrlregs_3 <= 32'h0; // @[CGRA.scala 19:27]
-    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 236:30]
+    end else if (_T_234) begin // @[CGRA.scala 236:48]
       if (3'h3 == currentAddressw[2:0]) begin // @[CGRA.scala 237:35]
         if (2'h0 == statew) begin // @[CGRA.scala 131:18]
           ctrlregs_3 <= 32'h0; // @[CGRA.scala 122:23]
@@ -15554,7 +15555,7 @@ module CGRA(
     end
     if (reset) begin // @[CGRA.scala 19:27]
       ctrlregs_4 <= 32'h0; // @[CGRA.scala 19:27]
-    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 236:30]
+    end else if (_T_234) begin // @[CGRA.scala 236:48]
       if (3'h4 == currentAddressw[2:0]) begin // @[CGRA.scala 237:35]
         if (2'h0 == statew) begin // @[CGRA.scala 131:18]
           ctrlregs_4 <= 32'h0; // @[CGRA.scala 122:23]
@@ -15569,7 +15570,7 @@ module CGRA(
     end
     if (reset) begin // @[CGRA.scala 19:27]
       ctrlregs_5 <= 32'h0; // @[CGRA.scala 19:27]
-    end else if (ctrlregs_axil_wen) begin // @[CGRA.scala 236:30]
+    end else if (_T_234) begin // @[CGRA.scala 236:48]
       if (3'h5 == currentAddressw[2:0]) begin // @[CGRA.scala 237:35]
         if (2'h0 == statew) begin // @[CGRA.scala 131:18]
           ctrlregs_5 <= 32'h0; // @[CGRA.scala 122:23]
@@ -15586,7 +15587,7 @@ module CGRA(
       configwaddr <= 32'h0; // @[CGRA.scala 23:30]
     end else if (configonepe) begin // @[CGRA.scala 194:20]
       if (config_finish) begin // @[CGRA.scala 197:23]
-        configwaddr <= 32'h1;
+        configwaddr <= 32'h0;
       end else if (configwaddr < 32'h78) begin // @[CGRA.scala 186:25]
         configwaddr <= _configwaddrnext_T_2;
       end else begin
