@@ -55,7 +55,7 @@ void readreg(VCGRA* cgra,VerilatedVcdC* tfp,int addr){
 				CYCLEADD(1)
 				cgra->io_axilite_s_rdata_ready = 0;
 }
-void axistream_in(VCGRA* cgra,VerilatedVcdC* tfp,int* data,int size){
+void axistream_in(VCGRA* cgra,VerilatedVcdC* tfp,long* data,int size){
 				for(int i =0 ;i<size;i++){
 					cgra->io_axistream_s_valid = 1;
 					cgra->io_axistream_s_data = data[i];
@@ -78,12 +78,13 @@ void datastream_in(VCGRA* cgra,VerilatedVcdC* tfp,int size){
 		cgra->io_streamin_0_valid = 0;
 		cgra->io_streamin_1_data = 0; 
 		cgra->io_streamin_1_valid = 0;
+		CYCLEADD(1)
 }
 void config_CGRA(VCGRA* cgra,VerilatedVcdC* tfp,char *bitstream,int bitstream_size){
     printf("start conifg cgra\n");
 		writereg(cgra,tfp,0,1);
     printf("change cgra state to config state\n");
-		axistream_in(cgra,tfp,(int*)bitstream,bitstream_size/4);
+		axistream_in(cgra,tfp,(long*)bitstream,bitstream_size/8);
     printf("config cgra finish \n\r");
 }
 int main(int argc, char** argv) {
@@ -125,9 +126,18 @@ int main(int argc, char** argv) {
     std::cout << "文件 " << filename << " 的大小为 " << fileSize << " 字节" << std::endl;
 
 //fft results
-	config_CGRA(cgra,tfp,bitstream_fft0,3872);
+			char bitstream_true[7744] = {0};
+			for(int i = 0; i<3872/4;i++){
+										((int*)bitstream_true)[i*2] = ((int*)bitstream_fft0)[i];
+													((int*)bitstream_true)[i*2+1] = 0;
+															}
+	config_CGRA(cgra,tfp,bitstream_true,7744);
 	CYCLEADD(5000)
 
+ datastream_in(cgra,tfp,40);
+	CYCLEADD(10)
+ datastream_in(cgra,tfp,60);
+	CYCLEADD(10)
  datastream_in(cgra,tfp,200);
 	CYCLEADD(5000)
 
